@@ -30,8 +30,7 @@ div {
     top:inherit;
     left: inherit;
     width: 100%;
-    color: white;
-    background-color: black;
+    color: black;
 }
 
 #Img2 {
@@ -39,8 +38,7 @@ div {
     top:inherit;
     left: inherit;
     width: 100%;
-    color: white;
-    background-color: black;
+    color: black;
 }
 
 
@@ -247,3 +245,20 @@ div {
 }
 
 
+
+#carouselOne {
+    margin-bottom: auto;
+}
+
+
+
+#text {
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.col-sm-8 {
+    height: auto;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
