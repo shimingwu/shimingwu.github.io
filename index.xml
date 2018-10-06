@@ -2,21 +2,21 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Shiming&#39;s Blog</title>
-    <link>https://github.com/shimingwu/shimingwu.github.io/tree/master/</link>
+    <link>https://shimingwu.github.io/</link>
     <description>Recent content on Shiming&#39;s Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <lastBuildDate>Wed, 19 Sep 2018 15:04:48 +0800</lastBuildDate>
     
-	<atom:link href="https://github.com/shimingwu/shimingwu.github.io/tree/master/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="https://shimingwu.github.io/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
       <title>理解Vue的Render渲染函数</title>
-      <link>https://github.com/shimingwu/shimingwu.github.io/tree/master/blog/2018-09/%E7%90%86%E8%A7%A3vue%E7%9A%84render%E6%B8%B2%E6%9F%93%E5%87%BD%E6%95%B0/</link>
+      <link>https://shimingwu.github.io/blog/2018-09/%E7%90%86%E8%A7%A3vue%E7%9A%84render%E6%B8%B2%E6%9F%93%E5%87%BD%E6%95%B0/</link>
       <pubDate>Wed, 19 Sep 2018 15:04:48 +0800</pubDate>
       
-      <guid>https://github.com/shimingwu/shimingwu.github.io/tree/master/blog/2018-09/%E7%90%86%E8%A7%A3vue%E7%9A%84render%E6%B8%B2%E6%9F%93%E5%87%BD%E6%95%B0/</guid>
+      <guid>https://shimingwu.github.io/blog/2018-09/%E7%90%86%E8%A7%A3vue%E7%9A%84render%E6%B8%B2%E6%9F%93%E5%87%BD%E6%95%B0/</guid>
       <description>*技术相关 *工作相关 *纯自学整理文档 前言 最近在尝试将Vue的SSR与.Net Core的Js SSR Middleware结合，让纯客户端应用转变为服务端渲染。发现自己对Vue的render函数很不了解，所以打算好好整理一下，至少理解个大概。 正文 1. HTML、节点与树（HTML, Nodes and Tree） 首先，Vue的官方文档里提供了关于浏览器的“DOM Tree”工作原理。 每个元素都是一个节点。每片文字也是一个节点。甚至</description>
     </item>
     
