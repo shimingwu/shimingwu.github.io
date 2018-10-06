@@ -2,20 +2,20 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Series on Shiming&#39;s Blog</title>
-    <link>https://github.com/shimingwu/shimingwu.github.io/series/</link>
+    <link>https://github.com/shimingwu/shimingwu.github.io/tree/master/series/</link>
     <description>Recent content in Series on Shiming&#39;s Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     
-	<atom:link href="https://github.com/shimingwu/shimingwu.github.io/series/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="https://github.com/shimingwu/shimingwu.github.io/tree/master/series/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
       <title>Vue2.0学习笔记</title>
-      <link>https://github.com/shimingwu/shimingwu.github.io/series/vue2.0%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/</link>
+      <link>https://github.com/shimingwu/shimingwu.github.io/tree/master/series/vue2.0%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/</link>
       <pubDate>Wed, 19 Sep 2018 15:04:48 +0800</pubDate>
       
-      <guid>https://github.com/shimingwu/shimingwu.github.io/series/vue2.0%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/</guid>
+      <guid>https://github.com/shimingwu/shimingwu.github.io/tree/master/series/vue2.0%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/</guid>
       <description></description>
     </item>
     
