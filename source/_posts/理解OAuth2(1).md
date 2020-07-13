@@ -8,14 +8,14 @@ tags:
 
 两三年前在创业公司的时候，曾经使用过OAuth2，虽然对流程有着大致的理解，但是很多词汇以及术语总是记不清楚。这次的项目又一次需要用到这方面的知识，于是打算好好记一下，也顺便整理思路，希望能把东西讲明白。
 
-## 0. OAuth2
+## 1. OAuth2
 
 OAuth2是目前较为流行的authorization机制，用来授权第三方应用，获得用户数据。
 
 <br/>
 <br/>
 
-## 1. Authorization and Authentication
+## 2. Authorization and Authentication
 
 最开始，我们先需要理解的是两个概念：
 - <b>Authentication:</b> 
@@ -31,7 +31,7 @@ OAuth2是目前较为流行的authorization机制，用来授权第三方应用�
 <br/>
 <br/>
 
-## 2. OAuth2.0 专业术语
+## 3. OAuth2.0 专业术语
 
 - <b>Resource Owner:</b> 即用户，数据的拥有者。
 - <b>Client:</b> 用户想要使用的应用、网站等。
@@ -48,7 +48,7 @@ OAuth2是目前较为流行的authorization机制，用来授权第三方应用�
 <br/>
 <br/>
 
-## 3. Grant Type （授权模式）
+## 4. Grant Type （授权模式）
 
 在上面的场景中，我们注意到Authorization Grant的存在，即凭证、授权。并且，我们需要使用该凭证来换取令牌（Access Token）。这是为什么呢？
 因为现实生活里面，不同的应用有不同的设计，有的网站可能是纯单界面应用（Single Page Application），或者Serverless，又或者是手机应用，它们有的只有前端没有服务器，有的有自己的服务器，这样的情况下，就导致了流程里某些需要使用服务器来储存获得安全性的设计无法实现。于是OAuth2.0里面就有了不同的Grant Type，来确保不同的应用可以选择适合自己的验证流程。
@@ -64,7 +64,7 @@ OAuth2是目前较为流行的authorization机制，用来授权第三方应用�
 <br/>
 <br/>
 
-## 4. OAuth2.0 Authorization Code Flow
+## 5. OAuth2.0 Authorization Code Flow
 
 下图为OAuth2.0 authorization code的简易流程。
 
