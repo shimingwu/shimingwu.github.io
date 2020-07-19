@@ -15,11 +15,11 @@ tags:
 
 | URL    | 是否同源 | 备注 |
 | :---- | :----:  | :---- |
-| http://account.example.com/settings/one.html | 是 | Path并不属于同源比较对象。他们的schema，host与port完全温和所以不存在不同源的问题 |
-| http://account.example.com/logout.html | 是 | Path并不属于同源比较对象。他们的schema，host与port完全温和所以不存在不同源的问题 |
-| https://account.example.com/logout.html | 否 | <b>Schema</b>不同，一个是https一个是http |
-| http://profile.example.com/logout.html | 否 | <b>Host</b>不同，一个是profile一个是account |
-| http://account.example.com:1000/logout.html | 否 | <b>Port</b>不同，在http里面，默认的port是80，这个例子里是1000，所以不同源 |
+| `http://account.example.com/settings/one.html` | 是 | Path并不属于同源比较对象。他们的schema，host与port完全温和所以不存在不同源的问题 |
+| `http://account.example.com/logout.html` | 是 | Path并不属于同源比较对象。他们的schema，host与port完全温和所以不存在不同源的问题 |
+| `https://account.example.com/logout.html` | 否 | <b>Schema</b>不同，一个是https一个是http |
+| `http://profile.example.com/logout.html` | 否 | <b>Host</b>不同，一个是profile一个是account |
+| `http://account.example.com:1000/logout.html` | 否 | <b>Port</b>不同，在http里面，默认的port是80，这个例子里是1000，所以不同源 |
 
 <br/>
 <br/>
@@ -87,13 +87,24 @@ tags:
 {% asset_img CORS_Sequence_Complex_Request.png sipmle request CORS flow %}
 
 从上图中，我们可以看出，我们将要发送的请求里面包含了一个自定义的header `X-PINGOTHER:pingpong`，于是需要进行预先检查：
-- `Access-Control-Request-Method: POST`: 实际请求将会是POST，是否同意？
-- `Access-Control-Request-Headers: X-PINGOTHER, Content-Type`: 实际请求包含了`X-PINGOTHER`与`Content-Type`，是否同意？
-服务器检查后，返回说：
-- `Access-Control-Request-Method: POST, GET, OPTIONS`：可以使用`POST`，`GET`和`OPTIONS`发起请求
-- `Access-Control-Request-Headers: X-PINGOTHER, Content-Type`：允许携带这两个headers
-- `Access-Control-Max-Age: 86400`：这个response的有效时间是86400秒，即24个小时。在24个小时内，相同的请求不需要再一次发送preflight request。这个有效时间将由浏览器进行管理，如果超过了最大时间，则实际请求不会继续有效。需要重新发送preflight request。
 
+| Header    | 解释 |
+| :---- | :---- |
+| `Access-Control-Request-Method: POST` | 实际请求将会是POST，是否同意？|
+| `Access-Control-Request-Headers: X-PINGOTHER, Content-Type`| 实际请求包含了`X-PINGOTHER`与`Content-Type`，是否同意？|
+
+
+服务器检查后，返回说：
+
+| Header    | 解释 |
+| :---- | :---- |
+| `Access-Control-Request-Method: POST, GET, OPTIONS` | 可以使用`POST`，`GET`和`OPTIONS`发起请求 |
+| `Access-Control-Request-Headers: X-PINGOTHER, Content-Type` | 允许携带这两个headers |
+| `Access-Control-Max-Age: 86400` | 这个response的有效时间是86400秒，即24个小时。在24个小时内，相同的请求不需要再一次发送preflight request。这个有效时间将由浏览器进行管理，如果超过了最大时间，则实际请求不会继续有效。需要重新发送preflight request。 |
+
+
+<br/>
+<br/>
 
 
 
