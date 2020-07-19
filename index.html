@@ -100,27 +100,27 @@
 </tr>
 </thead>
 <tbody><tr>
-<td align="left"><a href="http://account.example.com/settings/one.html" target="_blank" rel="noopener">http://account.example.com/settings/one.html</a></td>
+<td align="left"><code>http://account.example.com/settings/one.html</code></td>
 <td align="center">是</td>
 <td align="left">Path并不属于同源比较对象。他们的schema，host与port完全温和所以不存在不同源的问题</td>
 </tr>
 <tr>
-<td align="left"><a href="http://account.example.com/logout.html" target="_blank" rel="noopener">http://account.example.com/logout.html</a></td>
+<td align="left"><code>http://account.example.com/logout.html</code></td>
 <td align="center">是</td>
 <td align="left">Path并不属于同源比较对象。他们的schema，host与port完全温和所以不存在不同源的问题</td>
 </tr>
 <tr>
-<td align="left"><a href="https://account.example.com/logout.html" target="_blank" rel="noopener">https://account.example.com/logout.html</a></td>
+<td align="left"><code>https://account.example.com/logout.html</code></td>
 <td align="center">否</td>
 <td align="left"><b>Schema</b>不同，一个是https一个是http</td>
 </tr>
 <tr>
-<td align="left"><a href="http://profile.example.com/logout.html" target="_blank" rel="noopener">http://profile.example.com/logout.html</a></td>
+<td align="left"><code>http://profile.example.com/logout.html</code></td>
 <td align="center">否</td>
 <td align="left"><b>Host</b>不同，一个是profile一个是account</td>
 </tr>
 <tr>
-<td align="left"><a href="http://account.example.com:1000/logout.html" target="_blank" rel="noopener">http://account.example.com:1000/logout.html</a></td>
+<td align="left"><code>http://account.example.com:1000/logout.html</code></td>
 <td align="center">否</td>
 <td align="left"><b>Port</b>不同，在http里面，默认的port是80，这个例子里是1000，所以不同源</td>
 </tr>
@@ -170,18 +170,55 @@
 <img src="/2020/07/19/%E7%90%86%E8%A7%A3CORS(1)/CORS_Sequence_Complex_Request.png" class="" title="sipmle request CORS flow">
 
 <p>从上图中，我们可以看出，我们将要发送的请求里面包含了一个自定义的header <code>X-PINGOTHER:pingpong</code>，于是需要进行预先检查：</p>
-<ul>
-<li><code>Access-Control-Request-Method: POST</code>: 实际请求将会是POST，是否同意？</li>
-<li><code>Access-Control-Request-Headers: X-PINGOTHER, Content-Type</code>: 实际请求包含了<code>X-PINGOTHER</code>与<code>Content-Type</code>，是否同意？<br>服务器检查后，返回说：</li>
-<li><code>Access-Control-Request-Method: POST, GET, OPTIONS</code>：可以使用<code>POST</code>，<code>GET</code>和<code>OPTIONS</code>发起请求</li>
-<li><code>Access-Control-Request-Headers: X-PINGOTHER, Content-Type</code>：允许携带这两个headers</li>
-<li><code>Access-Control-Max-Age: 86400</code>：这个response的有效时间是86400秒，即24个小时。在24个小时内，相同的请求不需要再一次发送preflight request。这个有效时间将由浏览器进行管理，如果超过了最大时间，则实际请求不会继续有效。需要重新发送preflight request。</li>
-</ul>
+<table>
+<thead>
+<tr>
+<th align="left">Header</th>
+<th align="left">解释</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left"><code>Access-Control-Request-Method: POST</code></td>
+<td align="left">实际请求将会是POST，是否同意？</td>
+</tr>
+<tr>
+<td align="left"><code>Access-Control-Request-Headers: X-PINGOTHER, Content-Type</code></td>
+<td align="left">实际请求包含了<code>X-PINGOTHER</code>与<code>Content-Type</code>，是否同意？</td>
+</tr>
+</tbody></table>
+<p>服务器检查后，返回说：</p>
+<table>
+<thead>
+<tr>
+<th align="left">Header</th>
+<th align="left">解释</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left"><code>Access-Control-Request-Method: POST, GET, OPTIONS</code></td>
+<td align="left">可以使用<code>POST</code>，<code>GET</code>和<code>OPTIONS</code>发起请求</td>
+</tr>
+<tr>
+<td align="left"><code>Access-Control-Request-Headers: X-PINGOTHER, Content-Type</code></td>
+<td align="left">允许携带这两个headers</td>
+</tr>
+<tr>
+<td align="left"><code>Access-Control-Max-Age: 86400</code></td>
+<td align="left">这个response的有效时间是86400秒，即24个小时。在24个小时内，相同的请求不需要再一次发送preflight request。这个有效时间将由浏览器进行管理，如果超过了最大时间，则实际请求不会继续有效。需要重新发送preflight request。</td>
+</tr>
+</tbody></table>
+<br/>
+<br/>
+
+
+
+
+
 
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://shimingwu.github.io/2020/07/19/%E7%90%86%E8%A7%A3CORS(1)/" data-id="ckcskrjpl0000zasq74jiemuz" class="article-share-link">Share</a>
+      <a data-url="https://shimingwu.github.io/2020/07/19/%E7%90%86%E8%A7%A3CORS(1)/" data-id="ckcsl121a00002ytz0psqaecq" class="article-share-link">Share</a>
       
       
     </footer>
@@ -264,7 +301,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://shimingwu.github.io/2020/07/09/%E7%90%86%E8%A7%A3OAuth2(1)/" data-id="ckcskrjpv0002zasqf2hwaoed" class="article-share-link">Share</a>
+      <a data-url="https://shimingwu.github.io/2020/07/09/%E7%90%86%E8%A7%A3OAuth2(1)/" data-id="ckcsl121v00022ytz19ipe85z" class="article-share-link">Share</a>
       
       
     </footer>
@@ -333,7 +370,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://shimingwu.github.io/2018/09/19/%E7%90%86%E8%A7%A3Vue%E7%9A%84Render%E6%B8%B2%E6%9F%93%E5%87%BD%E6%95%B0/" data-id="ckcskrjpx0003zasq0w0x1dq2" class="article-share-link">Share</a>
+      <a data-url="https://shimingwu.github.io/2018/09/19/%E7%90%86%E8%A7%A3Vue%E7%9A%84Render%E6%B8%B2%E6%9F%93%E5%87%BD%E6%95%B0/" data-id="ckcsl121x00032ytz4nv1bh78" class="article-share-link">Share</a>
       
       
     </footer>
