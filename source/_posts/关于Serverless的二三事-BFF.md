@@ -1,7 +1,7 @@
 ---
 title: 关于Serverless的二三事
 date: 2020-07-20 14:15:32
-tags: 架构
+tags: [前端, 架构]
 ---
 <br/>
 <br/>

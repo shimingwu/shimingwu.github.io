@@ -1,7 +1,7 @@
 ---
 title: 理解Vue的Render渲染函数
 date: 2018-09-19 10:02:11
-tags: 前端
+tags: [前端, VueJs]
 ---
 
 <br/>
