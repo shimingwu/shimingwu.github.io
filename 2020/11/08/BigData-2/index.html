@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+
+  
+  <title>BigData(2) | Shiming&#39;s Blog</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="This is revision note for NUS master study of CS5425 Big Data Systems for Data Science. ChallengesIn order to process the huge amount of data, parallelization is required. However, there are multiple">
+<meta property="og:type" content="article">
+<meta property="og:title" content="BigData(2)">
+<meta property="og:url" content="https://shimingwu.github.io/2020/11/08/BigData-2/index.html">
+<meta property="og:site_name" content="Shiming&#39;s Blog">
+<meta property="og:description" content="This is revision note for NUS master study of CS5425 Big Data Systems for Data Science. ChallengesIn order to process the huge amount of data, parallelization is required. However, there are multiple">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://shimingwu.github.io/2020/11/08/BigData-2/MapReduce.png">
+<meta property="og:image" content="https://shimingwu.github.io/2020/11/08/BigData-2/HDFSArchitecture.png">
+<meta property="article:published_time" content="2020-11-08T22:10:26.000Z">
+<meta property="article:modified_time" content="2020-11-08T14:12:16.987Z">
+<meta property="article:author" content="Shiming Wu">
+<meta property="article:tag" content="Big Data">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://shimingwu.github.io/2020/11/08/BigData-2/MapReduce.png">
+  
+    <link rel="alternate" href="/atom.xml" title="Shiming&#39;s Blog" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+<meta name="generator" content="Hexo 4.2.1"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Shiming&#39;s Blog</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="https://shimingwu.github.io"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-BigData-2" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/11/08/BigData-2/" class="article-date">
+  <time datetime="2020-11-08T22:10:26.000Z" itemprop="datePublished">2020-11-08</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      BigData(2)
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>This is revision note for NUS master study of CS5425 Big Data Systems for Data Science.</p>
+<h2 id="Challenges"><a href="#Challenges" class="headerlink" title="Challenges"></a>Challenges</h2><p>In order to process the huge amount of data, parallelization is required. However, there are multiple challenge faced is the execution of the parallelization. For example, it is difficult to manage the communication between workers. One typical example can be the detection of a failed worker. It is hard to determine if a works is slow (takes longer to response) or it is failed. Moreover, there will have conflicts for resources access for different tasks. Even if there are multiple solutions like lock, conditional variables, etc, some other problems still exist.</p>
+<p>It is a factor that there are many solutions provided, whilst these solutions do not fit as a big data solution. For example, programmers still need to handle the locks and take care of some performance optimizations. </p>
+<h2 id="MapReduce"><a href="#MapReduce" class="headerlink" title="MapReduce"></a>MapReduce</h2><p>With the challenges, MapReduce was proposed as <strong>one of the solutions</strong> (a programming framework) to solve the massive data problem. Google has implemented MapReduce in C++, Java and Python.</p>
+<img src="/2020/11/08/BigData-2/MapReduce.png" class="" title="illusion of MapReduce">
+
+<p>Divide and conquer is the concept working behind. The tasks are distributed into different mappers and the tasks will be executed <strong>in parallel</strong>. However, the shuffle and sort becomes the bottleneck of the performance of the system because the moving of data is very costly. Last, the results will be sent to reducer for the aggregation, and the number of reducers can be another problem.</p>
+<p>Besides the three steps mentioned:</p>
+<ul>
+<li><code>Map</code></li>
+<li><code>Shuffle and sort</code></li>
+<li><code>Reduce</code></li>
+</ul>
+<p>Two more steps can be done: <code>combine</code> and <code>partition</code>. These two steps are serving as an optimization.</p>
+<ul>
+<li><p><code>Combine</code>: The combine function will be done in <strong>memory</strong>. This is to reduce the amount of data to be transferred via network. For example, if we have multiple key-value pairs: {a:1}, {b:2}, {a:3}, {c:4}. There are total 4 pairs will be sent to the next step from current worker. A combine function can helps to combine the results to {a:4}, {b:2}, {c:4} if the method of combining is addition. The number of pairs to be sent will be decreased from 4 to 3. The combine function can happen at different levels after a mapper task is completed.</p>
+</li>
+<li><p><code>Partition</code>: The partition function influence how the shuffle and sort works. A partition function can divide/split the mapper results and based on key, value or the number of reducers to distribute the results. </p>
+</li>
+</ul>
+<h2 id="Hadoop"><a href="#Hadoop" class="headerlink" title="Hadoop"></a>Hadoop</h2><p>As is known, MapReduce is a programming model and an associated implementation. Hadoop is an open-sourced version of MapReduce implementation in Java. </p>
+<p>There are two important parts in Hadoop:</p>
+<ul>
+<li><code>HDFS</code></li>
+<li><code>MapReduce</code></li>
+</ul>
+<p><code>HDFS</code> is a distributed file system and it is an open-sourced version of <code>GFS</code> (Google File System). GFS is the file system invested and used by Google to support a huge data processing and it has many advantages. As an open-sourced version (or clone) of the GFS, HDFS does not follow certain design decisions made by GFS. </p>
+<p>The architecture of HDFS is shown below.</p>
+<img src="/2020/11/08/BigData-2/HDFSArchitecture.png" class="" title="HDFS Architecture">
+
+<blockquote>
+<p>HDFS has a master/slave architecture. An HDFS cluster consists of a single NameNode, a master server that manages the file system namespace and regulates access to files by clients. In addition, there are a number of DataNodes, usually one per node in the cluster, which manage storage attached to the nodes that they run on. HDFS exposes a file system namespace and allows user data to be stored in files. Internally, a file is split into one or more blocks and these blocks are stored in a set of DataNodes. The NameNode executes file system namespace operations like opening, closing, and renaming files and directories. It also determines the mapping of blocks to DataNodes. The DataNodes are responsible for serving read and write requests from the file system’s clients. The DataNodes also perform block creation, deletion, and replication upon instruction from the NameNode.</p>
+</blockquote>
+<p>Notice that HDFS is still a <strong>master-slave architecture</strong>.</p>
+<h2 id="Basic-Algorithm-design-with-MapReduce"><a href="#Basic-Algorithm-design-with-MapReduce" class="headerlink" title="Basic Algorithm design with MapReduce"></a>Basic Algorithm design with MapReduce</h2><p>As MapReduce provides a high abstraction and many implementation details are hidden like we do not know where the mappers/reducers are running, when a particular mapper/reducers starts or finishes, there are only 4 places to implement an algorithm:</p>
+<ul>
+<li><code>map</code></li>
+<li><code>reduce</code></li>
+<li><code>combiner</code></li>
+<li><code>partitioner</code></li>
+</ul>
+<p>Some concerns should be taken into considerations. For example, for partial results, we might not want to emit partial results immediately in certain cases, as this might result in more traffic over network and slow down the processing. Three things are important for the performance for an algorithm design for MapReduce:</p>
+<ul>
+<li><code>Linear scalability</code></li>
+<li><code>Minimize I/O for both hard disk and network</code></li>
+<li><code>Memory</code></li>
+</ul>
+<h3 id="Linear-Scalability"><a href="#Linear-Scalability" class="headerlink" title="Linear Scalability"></a>Linear Scalability</h3><p>With the increase of the data size, the cost of communication will increase. As the <strong>input to every reducer is guaranteed to be sorted</strong> in MapReducer, there is a process to sort and transfer the results provided by mapper to the reducers, which is known as shuffle and it is a synchronization operation. The synchronous operation will make a significant impact on the overall performance. </p>
+<p>To avoid this, there are two main methods:</p>
+<ul>
+<li><p><code>Local aggregation</code></p>
+<p>A result can be aggregated during the map task. This is also known as <code>in-mapper combing</code> pattern.</p>
+</li>
+<li><p><code>Combiner</code></p>
+<p>Use combiner to reduce the network traffic</p>
+</li>
+</ul>
+<p>For <code>Local aggregation</code>, it is usually faster than actual <code>combiner</code> because it does not need to spill to the disk. However, a higher memory is requested. Moreover, implementation complexity might increase.</p>
+<br/>
+<br/>
+
+<h2 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h2><ul>
+<li><a href="https://cloud.tencent.com/developer/article/1030329" target="_blank" rel="noopener">简单解释 MapReduce 算法</a>  </li>
+<li><a href="https://hadoop.apache.org/docs/r1.2.1/hdfs_design.html" target="_blank" rel="noopener">HDFS Architecture Guide</a></li>
+</ul>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://shimingwu.github.io/2020/11/08/BigData-2/" data-id="ckh974ory000hzgu6acgu39sw" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Big-Data/" rel="tag">Big Data</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+  
+    <a href="/2020/11/08/BigData-1/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">BigData(1)</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Algorithm/" rel="tag">Algorithm</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Big-Data/" rel="tag">Big Data</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/LeetCode/" rel="tag">LeetCode</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/VueJs/" rel="tag">VueJs</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%89%8D%E7%AB%AF/" rel="tag">前端</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%8D%8F%E8%AE%AE/" rel="tag">协议</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%AE%89%E5%85%A8%E6%80%A7/" rel="tag">安全性</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%B7%A5%E5%85%B7/" rel="tag">工具</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%9E%B6%E6%9E%84/" rel="tag">架构</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%AE%97%E6%B3%95/" rel="tag">算法</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/Algorithm/" style="font-size: 15px;">Algorithm</a> <a href="/tags/Big-Data/" style="font-size: 15px;">Big Data</a> <a href="/tags/LeetCode/" style="font-size: 15px;">LeetCode</a> <a href="/tags/VueJs/" style="font-size: 10px;">VueJs</a> <a href="/tags/%E5%89%8D%E7%AB%AF/" style="font-size: 20px;">前端</a> <a href="/tags/%E5%8D%8F%E8%AE%AE/" style="font-size: 10px;">协议</a> <a href="/tags/%E5%AE%89%E5%85%A8%E6%80%A7/" style="font-size: 15px;">安全性</a> <a href="/tags/%E5%B7%A5%E5%85%B7/" style="font-size: 10px;">工具</a> <a href="/tags/%E6%9E%B6%E6%9E%84/" style="font-size: 10px;">架构</a> <a href="/tags/%E7%AE%97%E6%B3%95/" style="font-size: 15px;">算法</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/11/">November 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/09/">September 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/07/">July 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/09/">September 2018</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2020/11/08/BigData-2/">BigData(2)</a>
+          </li>
+        
+          <li>
+            <a href="/2020/11/08/BigData-1/">BigData(1)</a>
+          </li>
+        
+          <li>
+            <a href="/2020/09/26/LeetCode-Largest-Number/">LeetCode Largest Number</a>
+          </li>
+        
+          <li>
+            <a href="/2020/09/22/LeetCode-Majority-Element-II/">LeetCode(229) Majority Element II</a>
+          </li>
+        
+          <li>
+            <a href="/2020/07/21/%E5%85%B3%E4%BA%8EWebpack/">关于Webpack</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2020 Shiming Wu<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+
+  
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+  </div>
+</body>
+</html>

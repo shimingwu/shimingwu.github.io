@@ -66,6 +66,174 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-BigData-2" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/11/08/BigData-2/" class="article-date">
+  <time datetime="2020-11-08T22:10:26.000Z" itemprop="datePublished">2020-11-08</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/11/08/BigData-2/">BigData(2)</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>This is revision note for NUS master study of CS5425 Big Data Systems for Data Science.</p>
+<h2 id="Challenges"><a href="#Challenges" class="headerlink" title="Challenges"></a>Challenges</h2><p>In order to process the huge amount of data, parallelization is required. However, there are multiple challenge faced is the execution of the parallelization. For example, it is difficult to manage the communication between workers. One typical example can be the detection of a failed worker. It is hard to determine if a works is slow (takes longer to response) or it is failed. Moreover, there will have conflicts for resources access for different tasks. Even if there are multiple solutions like lock, conditional variables, etc, some other problems still exist.</p>
+<p>It is a factor that there are many solutions provided, whilst these solutions do not fit as a big data solution. For example, programmers still need to handle the locks and take care of some performance optimizations. </p>
+<h2 id="MapReduce"><a href="#MapReduce" class="headerlink" title="MapReduce"></a>MapReduce</h2><p>With the challenges, MapReduce was proposed as <strong>one of the solutions</strong> (a programming framework) to solve the massive data problem. Google has implemented MapReduce in C++, Java and Python.</p>
+<img src="/2020/11/08/BigData-2/MapReduce.png" class="" title="illusion of MapReduce">
+
+<p>Divide and conquer is the concept working behind. The tasks are distributed into different mappers and the tasks will be executed <strong>in parallel</strong>. However, the shuffle and sort becomes the bottleneck of the performance of the system because the moving of data is very costly. Last, the results will be sent to reducer for the aggregation, and the number of reducers can be another problem.</p>
+<p>Besides the three steps mentioned:</p>
+<ul>
+<li><code>Map</code></li>
+<li><code>Shuffle and sort</code></li>
+<li><code>Reduce</code></li>
+</ul>
+<p>Two more steps can be done: <code>combine</code> and <code>partition</code>. These two steps are serving as an optimization.</p>
+<ul>
+<li><p><code>Combine</code>: The combine function will be done in <strong>memory</strong>. This is to reduce the amount of data to be transferred via network. For example, if we have multiple key-value pairs: {a:1}, {b:2}, {a:3}, {c:4}. There are total 4 pairs will be sent to the next step from current worker. A combine function can helps to combine the results to {a:4}, {b:2}, {c:4} if the method of combining is addition. The number of pairs to be sent will be decreased from 4 to 3. The combine function can happen at different levels after a mapper task is completed.</p>
+</li>
+<li><p><code>Partition</code>: The partition function influence how the shuffle and sort works. A partition function can divide/split the mapper results and based on key, value or the number of reducers to distribute the results. </p>
+</li>
+</ul>
+<h2 id="Hadoop"><a href="#Hadoop" class="headerlink" title="Hadoop"></a>Hadoop</h2><p>As is known, MapReduce is a programming model and an associated implementation. Hadoop is an open-sourced version of MapReduce implementation in Java. </p>
+<p>There are two important parts in Hadoop:</p>
+<ul>
+<li><code>HDFS</code></li>
+<li><code>MapReduce</code></li>
+</ul>
+<p><code>HDFS</code> is a distributed file system and it is an open-sourced version of <code>GFS</code> (Google File System). GFS is the file system invested and used by Google to support a huge data processing and it has many advantages. As an open-sourced version (or clone) of the GFS, HDFS does not follow certain design decisions made by GFS. </p>
+<p>The architecture of HDFS is shown below.</p>
+<img src="/2020/11/08/BigData-2/HDFSArchitecture.png" class="" title="HDFS Architecture">
+
+<blockquote>
+<p>HDFS has a master/slave architecture. An HDFS cluster consists of a single NameNode, a master server that manages the file system namespace and regulates access to files by clients. In addition, there are a number of DataNodes, usually one per node in the cluster, which manage storage attached to the nodes that they run on. HDFS exposes a file system namespace and allows user data to be stored in files. Internally, a file is split into one or more blocks and these blocks are stored in a set of DataNodes. The NameNode executes file system namespace operations like opening, closing, and renaming files and directories. It also determines the mapping of blocks to DataNodes. The DataNodes are responsible for serving read and write requests from the file system’s clients. The DataNodes also perform block creation, deletion, and replication upon instruction from the NameNode.</p>
+</blockquote>
+<p>Notice that HDFS is still a <strong>master-slave architecture</strong>.</p>
+<h2 id="Basic-Algorithm-design-with-MapReduce"><a href="#Basic-Algorithm-design-with-MapReduce" class="headerlink" title="Basic Algorithm design with MapReduce"></a>Basic Algorithm design with MapReduce</h2><p>As MapReduce provides a high abstraction and many implementation details are hidden like we do not know where the mappers/reducers are running, when a particular mapper/reducers starts or finishes, there are only 4 places to implement an algorithm:</p>
+<ul>
+<li><code>map</code></li>
+<li><code>reduce</code></li>
+<li><code>combiner</code></li>
+<li><code>partitioner</code></li>
+</ul>
+<p>Some concerns should be taken into considerations. For example, for partial results, we might not want to emit partial results immediately in certain cases, as this might result in more traffic over network and slow down the processing. Three things are important for the performance for an algorithm design for MapReduce:</p>
+<ul>
+<li><code>Linear scalability</code></li>
+<li><code>Minimize I/O for both hard disk and network</code></li>
+<li><code>Memory</code></li>
+</ul>
+<h3 id="Linear-Scalability"><a href="#Linear-Scalability" class="headerlink" title="Linear Scalability"></a>Linear Scalability</h3><p>With the increase of the data size, the cost of communication will increase. As the <strong>input to every reducer is guaranteed to be sorted</strong> in MapReducer, there is a process to sort and transfer the results provided by mapper to the reducers, which is known as shuffle and it is a synchronization operation. The synchronous operation will make a significant impact on the overall performance. </p>
+<p>To avoid this, there are two main methods:</p>
+<ul>
+<li><p><code>Local aggregation</code></p>
+<p>A result can be aggregated during the map task. This is also known as <code>in-mapper combing</code> pattern.</p>
+</li>
+<li><p><code>Combiner</code></p>
+<p>Use combiner to reduce the network traffic</p>
+</li>
+</ul>
+<p>For <code>Local aggregation</code>, it is usually faster than actual <code>combiner</code> because it does not need to spill to the disk. However, a higher memory is requested. Moreover, implementation complexity might increase.</p>
+<br/>
+<br/>
+
+<h2 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h2><ul>
+<li><a href="https://cloud.tencent.com/developer/article/1030329" target="_blank" rel="noopener">简单解释 MapReduce 算法</a>  </li>
+<li><a href="https://hadoop.apache.org/docs/r1.2.1/hdfs_design.html" target="_blank" rel="noopener">HDFS Architecture Guide</a></li>
+</ul>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://shimingwu.github.io/2020/11/08/BigData-2/" data-id="ckh974ory000hzgu6acgu39sw" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Big-Data/" rel="tag">Big Data</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-BigData-1" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/11/08/BigData-1/" class="article-date">
+  <time datetime="2020-11-08T16:50:13.000Z" itemprop="datePublished">2020-11-08</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/11/08/BigData-1/">BigData(1)</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>This is revision note for NUS master study of CS5425 Big Data Systems for Data Science.</p>
+<h2 id="5V-for-big-data"><a href="#5V-for-big-data" class="headerlink" title="5V for big data"></a>5V for big data</h2><ul>
+<li><code>Volume</code>: The size/scale of data</li>
+<li><code>Velocity</code>: The speed of input of data (like data streaming)</li>
+<li><code>Variety</code>: The different structures of data. For example, images, articles…</li>
+<li><code>Veracity</code>: The quality of data. </li>
+<li><code>Value</code>: The value brought by the data</li>
+</ul>
+<p>Nowadays, the frequent network activities result in a huge amount of data (Volume). To process these data, big data technology is required. Furthermore, the speed to process data is important (Velocity). For example, if we cannot analyze the data obtained within certain period of time, the value of data will be lost (Value), like detecting the system error in transport system of a city. Besides, there are multiple types of data are generated (Variety). Lastly, even if the data can be processed in a huge volume fast, the quality of both data and results should be taken care of (Veracity).</p>
+<h2 id="Infrastructure-of-big-data"><a href="#Infrastructure-of-big-data" class="headerlink" title="Infrastructure of big data"></a>Infrastructure of big data</h2><ul>
+<li><code>Cloud Computing</code></li>
+<li><code>Data Center</code></li>
+</ul>
+<p>Cloud computing serves as an infrastructure to support the big data processing and calculation. There are three main serves provided by the cloud computing:</p>
+<ul>
+<li><code>IaaS</code>: Infrastructure as a Service. With this, the operation cost can be saved.</li>
+<li><code>PaaS</code>: Platform as a Service. Users can configure certain platforms like databases.</li>
+<li><code>SaaS</code>: Software as a Service. Users can directly consume the software like Gmail.</li>
+</ul>
+<p>With these, everything can be provided as a service and it helps to save cost, provide ‘infintie’ calculating/storage capacity to users and users  can utilize these on demand. At the same, Cloud Computing also contributes a lot in terms of data generating. Thus, it is a data provider, at the same time, also a solution provider.</p>
+<p>Data center serves as a key infrastructure of cloud computing. A data center mainly has three blocks:</p>
+<ul>
+<li><code>blade server</code>: refer to a normal server</li>
+<li><code>rack</code>: a rack consists of dozens of servers</li>
+<li><code>data center</code>: a data center consists of many racks</li>
+</ul>
+<p>The transfer of data is expensive especially when a data needs to be sent across the network.</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://shimingwu.github.io/2020/11/08/BigData-1/" data-id="ckh974orx000gzgu6fouf2ebm" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Big-Data/" rel="tag">Big Data</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
     <article id="post-LeetCode-Largest-Number" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
     <a href="/2020/09/26/LeetCode-Largest-Number/" class="article-date">
@@ -101,7 +269,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://shimingwu.github.io/2020/09/26/LeetCode-Largest-Number/" data-id="ckfj6ejla0009z4r889irb4n4" class="article-share-link">Share</a>
+      <a data-url="https://shimingwu.github.io/2020/09/26/LeetCode-Largest-Number/" data-id="ckh974orz000jzgu62i77d599" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Algorithm/" rel="tag">Algorithm</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/LeetCode/" rel="tag">LeetCode</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E7%AE%97%E6%B3%95/" rel="tag">算法</a></li></ul>
@@ -150,7 +318,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://shimingwu.github.io/2020/09/22/LeetCode-Majority-Element-II/" data-id="ckfj6ejlc000bz4r827a6ddfy" class="article-share-link">Share</a>
+      <a data-url="https://shimingwu.github.io/2020/09/22/LeetCode-Majority-Element-II/" data-id="ckh974os0000lzgu6bhq92zkx" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Algorithm/" rel="tag">Algorithm</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/LeetCode/" rel="tag">LeetCode</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E7%AE%97%E6%B3%95/" rel="tag">算法</a></li></ul>
@@ -300,7 +468,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://shimingwu.github.io/2020/07/21/%E5%85%B3%E4%BA%8EWebpack/" data-id="ckfj6ejlx001bz4r8enr755lx" class="article-share-link">Share</a>
+      <a data-url="https://shimingwu.github.io/2020/07/21/%E5%85%B3%E4%BA%8EWebpack/" data-id="ckh974osm001ozgu6hlaa00h4" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E5%89%8D%E7%AB%AF/" rel="tag">前端</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E5%B7%A5%E5%85%B7/" rel="tag">工具</a></li></ul>
@@ -384,7 +552,7 @@
 <h3 id="拆分程度"><a href="#拆分程度" class="headerlink" title="拆分程度"></a>拆分程度</h3><p>上面以及聊过两种不同的架构，那么在实现上，又有什么考虑呢？首先是拆分程度。既然我们要将一个大后端拆分成多个BFF，那么要根据什么来拆分呢：</p>
 <ul>
 <li>UX/UI：根据用户的交互体验。比如PC端的体验和移动端的体验不同，可以考虑拆分出2个BFF。</li>
-<li>端级：根据不同的设备来进行拆分。比如iOS与Andorid同属于移动端，但是他们隶属于不同的前端设备，我们也可以根据这个来拆分。</li>
+<li>端级：根据不同的设备来进行拆分。比如iOS与Android同属于移动端，但是他们隶属于不同的前端设备，我们也可以根据这个来拆分。</li>
 <li>团队：根据不同的团队来拆分。即每一个前端团队都拥有一个自己的BFF。</li>
 </ul>
 <p>通常情况下，我们会选择UX/UI来拆分。团队拆分很大程度上等同于UX/UI（但是还是看每个公司的组织结构），而端级的拆分很可能导致大量的代码重复，因为接口总是相同的。</p>
@@ -421,7 +589,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://shimingwu.github.io/2020/07/20/%E5%85%B3%E4%BA%8EServerless%E7%9A%84%E4%BA%8C%E4%B8%89%E4%BA%8B-BFF/" data-id="ckfj6ejle000dz4r8bfz6209t" class="article-share-link">Share</a>
+      <a data-url="https://shimingwu.github.io/2020/07/20/%E5%85%B3%E4%BA%8EServerless%E7%9A%84%E4%BA%8C%E4%B8%89%E4%BA%8B-BFF/" data-id="ckh974os1000nzgu67gg9fjlo" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E5%89%8D%E7%AB%AF/" rel="tag">前端</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E6%9E%B6%E6%9E%84/" rel="tag">架构</a></li></ul>
@@ -585,7 +753,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://shimingwu.github.io/2020/07/19/%E7%90%86%E8%A7%A3CORS(1)/" data-id="ckfj6ejlg000gz4r8f16m5mf7" class="article-share-link">Share</a>
+      <a data-url="https://shimingwu.github.io/2020/07/19/%E7%90%86%E8%A7%A3CORS(1)/" data-id="ckh974os4000qzgu61rjfdztb" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E5%AE%89%E5%85%A8%E6%80%A7/" rel="tag">安全性</a></li></ul>
@@ -670,7 +838,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://shimingwu.github.io/2020/07/09/%E7%90%86%E8%A7%A3OAuth2(1)/" data-id="ckfj6ejlj000iz4r8hnl0ddms" class="article-share-link">Share</a>
+      <a data-url="https://shimingwu.github.io/2020/07/09/%E7%90%86%E8%A7%A3OAuth2(1)/" data-id="ckh974os5000rzgu60m9uhf1q" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E5%8D%8F%E8%AE%AE/" rel="tag">协议</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E5%AE%89%E5%85%A8%E6%80%A7/" rel="tag">安全性</a></li></ul>
@@ -741,7 +909,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://shimingwu.github.io/2018/09/19/%E7%90%86%E8%A7%A3Vue%E7%9A%84Render%E6%B8%B2%E6%9F%93%E5%87%BD%E6%95%B0/" data-id="ckfj6ejll000kz4r82shmcg32" class="article-share-link">Share</a>
+      <a data-url="https://shimingwu.github.io/2018/09/19/%E7%90%86%E8%A7%A3Vue%E7%9A%84Render%E6%B8%B2%E6%9F%93%E5%87%BD%E6%95%B0/" data-id="ckh974os6000uzgu6148obprv" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/VueJs/" rel="tag">VueJs</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E5%89%8D%E7%AB%AF/" rel="tag">前端</a></li></ul>
@@ -766,7 +934,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">Tags</h3>
     <div class="widget">
-      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Algorithm/" rel="tag">Algorithm</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/LeetCode/" rel="tag">LeetCode</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/VueJs/" rel="tag">VueJs</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%89%8D%E7%AB%AF/" rel="tag">前端</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%8D%8F%E8%AE%AE/" rel="tag">协议</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%AE%89%E5%85%A8%E6%80%A7/" rel="tag">安全性</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%B7%A5%E5%85%B7/" rel="tag">工具</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%9E%B6%E6%9E%84/" rel="tag">架构</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%AE%97%E6%B3%95/" rel="tag">算法</a></li></ul>
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Algorithm/" rel="tag">Algorithm</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Big-Data/" rel="tag">Big Data</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/LeetCode/" rel="tag">LeetCode</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/VueJs/" rel="tag">VueJs</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%89%8D%E7%AB%AF/" rel="tag">前端</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%8D%8F%E8%AE%AE/" rel="tag">协议</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%AE%89%E5%85%A8%E6%80%A7/" rel="tag">安全性</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%B7%A5%E5%85%B7/" rel="tag">工具</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%9E%B6%E6%9E%84/" rel="tag">架构</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%AE%97%E6%B3%95/" rel="tag">算法</a></li></ul>
     </div>
   </div>
 
@@ -776,7 +944,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">Tag Cloud</h3>
     <div class="widget tagcloud">
-      <a href="/tags/Algorithm/" style="font-size: 15px;">Algorithm</a> <a href="/tags/LeetCode/" style="font-size: 15px;">LeetCode</a> <a href="/tags/VueJs/" style="font-size: 10px;">VueJs</a> <a href="/tags/%E5%89%8D%E7%AB%AF/" style="font-size: 20px;">前端</a> <a href="/tags/%E5%8D%8F%E8%AE%AE/" style="font-size: 10px;">协议</a> <a href="/tags/%E5%AE%89%E5%85%A8%E6%80%A7/" style="font-size: 15px;">安全性</a> <a href="/tags/%E5%B7%A5%E5%85%B7/" style="font-size: 10px;">工具</a> <a href="/tags/%E6%9E%B6%E6%9E%84/" style="font-size: 10px;">架构</a> <a href="/tags/%E7%AE%97%E6%B3%95/" style="font-size: 15px;">算法</a>
+      <a href="/tags/Algorithm/" style="font-size: 15px;">Algorithm</a> <a href="/tags/Big-Data/" style="font-size: 15px;">Big Data</a> <a href="/tags/LeetCode/" style="font-size: 15px;">LeetCode</a> <a href="/tags/VueJs/" style="font-size: 10px;">VueJs</a> <a href="/tags/%E5%89%8D%E7%AB%AF/" style="font-size: 20px;">前端</a> <a href="/tags/%E5%8D%8F%E8%AE%AE/" style="font-size: 10px;">协议</a> <a href="/tags/%E5%AE%89%E5%85%A8%E6%80%A7/" style="font-size: 15px;">安全性</a> <a href="/tags/%E5%B7%A5%E5%85%B7/" style="font-size: 10px;">工具</a> <a href="/tags/%E6%9E%B6%E6%9E%84/" style="font-size: 10px;">架构</a> <a href="/tags/%E7%AE%97%E6%B3%95/" style="font-size: 15px;">算法</a>
     </div>
   </div>
 
@@ -785,7 +953,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">Archives</h3>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/09/">September 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/07/">July 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/09/">September 2018</a></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/11/">November 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/09/">September 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/07/">July 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/09/">September 2018</a></li></ul>
     </div>
   </div>
 
@@ -798,6 +966,14 @@
       <ul>
         
           <li>
+            <a href="/2020/11/08/BigData-2/">BigData(2)</a>
+          </li>
+        
+          <li>
+            <a href="/2020/11/08/BigData-1/">BigData(1)</a>
+          </li>
+        
+          <li>
             <a href="/2020/09/26/LeetCode-Largest-Number/">LeetCode Largest Number</a>
           </li>
         
@@ -807,14 +983,6 @@
         
           <li>
             <a href="/2020/07/21/%E5%85%B3%E4%BA%8EWebpack/">关于Webpack</a>
-          </li>
-        
-          <li>
-            <a href="/2020/07/20/%E5%85%B3%E4%BA%8EServerless%E7%9A%84%E4%BA%8C%E4%B8%89%E4%BA%8B-BFF/">关于Serverless的二三事</a>
-          </li>
-        
-          <li>
-            <a href="/2020/07/19/%E7%90%86%E8%A7%A3CORS(1)/">理解CORS(1)</a>
           </li>
         
       </ul>
