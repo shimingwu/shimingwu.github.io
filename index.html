@@ -66,6 +66,486 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-BigData-3" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/11/09/BigData-3/" class="article-date">
+  <time datetime="2020-11-09T14:24:09.000Z" itemprop="datePublished">2020-11-09</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/11/09/BigData-3/">BigData(3)</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>This is revision note for NUS master study of CS5425 Big Data Systems for Data Science.</p>
+<h2 id="Relational-Database"><a href="#Relational-Database" class="headerlink" title="Relational Database"></a>Relational Database</h2><p>Usually, Hadoop/MapReduce is used to support the OLAP.</p>
+<h3 id="Relational-Algebra"><a href="#Relational-Algebra" class="headerlink" title="Relational Algebra"></a>Relational Algebra</h3><p>Considering the table <code>Employee</code>. All examples will use the table.</p>
+<p><strong>Projection Π</strong></p>
+<table>
+<tr><th> Employee </th><th> Π NAME, AGE (Employee) </th></tr>
+<tr><td>
+
+<table>
+<thead>
+<tr>
+<th align="left">ID</th>
+<th align="center">NAME</th>
+<th align="left">AGE</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">1</td>
+<td align="center">Mike</td>
+<td align="left">12</td>
+</tr>
+<tr>
+<td align="left">2</td>
+<td align="center">Jane</td>
+<td align="left">22</td>
+</tr>
+<tr>
+<td align="left">3</td>
+<td align="center">Vincent</td>
+<td align="left">45</td>
+</tr>
+</tbody></table>
+</td><td>
+
+<table>
+<thead>
+<tr>
+<th align="center">NAME</th>
+<th align="left">AGE</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">Mike</td>
+<td align="left">12</td>
+</tr>
+<tr>
+<td align="center">Jane</td>
+<td align="left">22</td>
+</tr>
+<tr>
+<td align="center">Vincent</td>
+<td align="left">45</td>
+</tr>
+</tbody></table>
+</td></tr> </table>
+
+<p>To perform projection, only mapper is used. The bottleneck is the streaming read speed of HDFS.</p>
+<p><strong>Selection σ</strong></p>
+<table>
+<tr><th> Employee </th><th> σ ID = 1 (Employee) </th></tr>
+<tr><td>
+
+<table>
+<thead>
+<tr>
+<th align="left">ID</th>
+<th align="center">NAME</th>
+<th align="left">AGE</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">1</td>
+<td align="center">Mike</td>
+<td align="left">12</td>
+</tr>
+<tr>
+<td align="left">2</td>
+<td align="center">Jane</td>
+<td align="left">22</td>
+</tr>
+<tr>
+<td align="left">3</td>
+<td align="center">Vincent</td>
+<td align="left">45</td>
+</tr>
+</tbody></table>
+</td><td>
+
+<table>
+<thead>
+<tr>
+<th align="left">ID</th>
+<th align="center">NAME</th>
+<th align="left">AGE</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">1</td>
+<td align="center">Mike</td>
+<td align="left">12</td>
+</tr>
+</tbody></table>
+</td></tr> </table>
+
+<p>To perform projection, only mapper is used. The bottleneck is the streaming read speed of HDFS. Selection is very similar to Projection in general.</p>
+<p><strong>Group By (Aggregation)</strong></p>
+<p>This can be done via mapper + reducer. In addition, combiner can be used to optimize the performance. </p>
+<p><strong>Order By</strong></p>
+<p>There are two sort problems here: Sort by <strong>Key</strong> and Sort by <strong>Value</strong>.</p>
+<p>In terms of sort by key, MapReduce (Hadoop) guarantees the order of keys are sorted before sending to the reducers. If a tuple only has a single column, for example, {‘Apple’, 1}, then the sort is very simple.</p>
+<p>However, what if there are multiple columns exist for a tuple, for example, {‘Apple’, ‘2020-10-2’, 1}. If we want to sort by the fruit name, followed by the sort of date, there are 2 main approaches:</p>
+<ul>
+<li><code>Sort inside Reducer (BAD)</code></li>
+<li><code>Value-to-Key (BETTER)</code></li>
+</ul>
+<blockquote>
+<p>For the first approach, it involves having the reducer buffer all of the values for a given key and do an in-reducer sort. Since the reducer will be receiving all values for a given key, this approach could possibly cause the reducer to run out of memory. </p>
+</blockquote>
+<table>
+<tr>
+  <th> Map </th>
+  <th> Shuffle and Sort (by the key) </th>
+  <th> Reduce </th>
+</tr>
+<tr>
+
+<td>
+
+<table>
+<thead>
+<tr>
+<th align="left">Key</th>
+<th align="center">Value 1</th>
+<th align="left">Value 2</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">Apple</td>
+<td align="center">‘2020-10-2’</td>
+<td align="left">10</td>
+</tr>
+<tr>
+<td align="left">Banana</td>
+<td align="center">‘2020-10-5’</td>
+<td align="left">20</td>
+</tr>
+<tr>
+<td align="left">Orange</td>
+<td align="center">‘2020-10-2’</td>
+<td align="left">10</td>
+</tr>
+<tr>
+<td align="left">Apple</td>
+<td align="center">‘2020-10-5’</td>
+<td align="left">20</td>
+</tr>
+<tr>
+<td align="left">Apple</td>
+<td align="center">‘2020-10-2’</td>
+<td align="left">10</td>
+</tr>
+<tr>
+<td align="left">Banana</td>
+<td align="center">‘2020-10-5’</td>
+<td align="left">20</td>
+</tr>
+<tr>
+<td align="left">Orange</td>
+<td align="center">‘2020-10-2’</td>
+<td align="left">10</td>
+</tr>
+<tr>
+<td align="left">Apple</td>
+<td align="center">‘2020-10-5’</td>
+<td align="left">20</td>
+</tr>
+<tr>
+<td align="left"></td></td>
+<td align="center"></td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left"><td></td>
+<td align="center"></td>
+<td align="left"></td>
+</tr>
+</tbody></table>
+<table>
+<thead>
+<tr>
+<th align="left">Key</th>
+<th align="center">Values under the key</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">Apple</td>
+<td align="center">(‘2020-10-2’, 10)<br/> <strong>(‘2020-10-5’, 20)</strong><br/> <strong>(‘2020-10-2’, 10)</strong><br/> (‘2020-10-5’, 20)</td>
+</tr>
+<tr>
+<td align="left">Banana</td>
+<td align="center">(‘2020-10-5’, 20)<br/> (‘2020-10-5’, 20)</td>
+</tr>
+<tr>
+<td align="left">Orange</td>
+<td align="center">(‘2020-10-2’, 10)<br/> (‘2020-10-2’, 10)</td>
+</tr>
+</tbody></table>
+</td>
+<td>
+
+<table>
+<thead>
+<tr>
+<th align="left">Key</th>
+<th align="center">Values under the key</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">Apple</td>
+<td align="center">(‘2020-10-2’, 10)<br/>  <strong>(‘2020-10-2’, 10)</strong><br/> <strong>(‘2020-10-5’, 20)</strong><br/>(‘2020-10-5’, 20)</td>
+</tr>
+<tr>
+<td align="left">Banana</td>
+<td align="center">(‘2020-10-5’, 20)<br/> (‘2020-10-5’, 20)</td>
+</tr>
+<tr>
+<td align="left">Orange</td>
+<td align="center">(‘2020-10-2’, 10)<br/> (‘2020-10-2’, 10)</td>
+</tr>
+<tr>
+<td align="left"></td></td>
+<td align="center"></td>
+</tr>
+<tr>
+<td align="left"></tr></td>
+<td align="center"></td>
+</tr>
+</tbody></table>
+</table>
+
+<blockquote>
+<p>The second approach involves creating a composite key by adding a part of, or the entire value to the natural key to achieve your sorting objectives. </p>
+</blockquote>
+<table>
+<tr>
+  <th> Map </th>
+  <th> Shuffle/Partition </th>
+  <th> Sort </th>
+</tr>
+<tr>
+
+<td>
+
+<table>
+<thead>
+<tr>
+<th align="left">Key</th>
+<th align="center">Value 1</th>
+<th align="left">Value 2</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">Apple</td>
+<td align="center">‘2020-10-2’</td>
+<td align="left">10</td>
+</tr>
+<tr>
+<td align="left">Banana</td>
+<td align="center">‘2020-10-5’</td>
+<td align="left">20</td>
+</tr>
+<tr>
+<td align="left">Orange</td>
+<td align="center">‘2020-10-2’</td>
+<td align="left">10</td>
+</tr>
+<tr>
+<td align="left">Apple</td>
+<td align="center">‘2020-10-5’</td>
+<td align="left">20</td>
+</tr>
+<tr>
+<td align="left">Apple</td>
+<td align="center">‘2020-10-2’</td>
+<td align="left">10</td>
+</tr>
+<tr>
+<td align="left">Banana</td>
+<td align="center">‘2020-10-5’</td>
+<td align="left">20</td>
+</tr>
+<tr>
+<td align="left">Orange</td>
+<td align="center">‘2020-10-2’</td>
+<td align="left">10</td>
+</tr>
+<tr>
+<td align="left">Apple</td>
+<td align="center">‘2020-10-5’</td>
+<td align="left">20</td>
+</tr>
+<tr>
+<td align="left"></td></td>
+<td align="center"></td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left"><td></td>
+<td align="center"></td>
+<td align="left"></td>
+</tr>
+</tbody></table>
+<table>
+<thead>
+<tr>
+<th align="center">Key</th>
+<th align="left">Value 2</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">Apple, ‘2020-10-2’</td>
+<td align="left">10</td>
+</tr>
+<tr>
+<td align="center">Apple,<strong>‘2020-10-5’</strong></td>
+<td align="left">20</td>
+</tr>
+<tr>
+<td align="center">Apple, <strong>‘2020-10-2’</strong></td>
+<td align="left">10</td>
+</tr>
+<tr>
+<td align="center">Apple, ‘2020-10-5’</td>
+<td align="left">20</td>
+</tr>
+<tr>
+<td align="center">Banana, ‘2020-10-5’</td>
+<td align="left">20</td>
+</tr>
+<tr>
+<td align="center">Banana, ‘2020-10-5’</td>
+<td align="left">20</td>
+</tr>
+<tr>
+<td align="center">Orange, ‘2020-10-2’</td>
+<td align="left">10</td>
+</tr>
+<tr>
+<td align="center">Orange, ‘2020-10-2’</td>
+<td align="left">10</td>
+</tr>
+</tbody></table>
+</td>
+<td>
+
+<table>
+<thead>
+<tr>
+<th align="center">Key</th>
+<th align="left">Value 2</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">Apple, ‘2020-10-2’</td>
+<td align="left">10</td>
+</tr>
+<tr>
+<td align="center">Apple, <strong>‘2020-10-2’</strong></td>
+<td align="left">20</td>
+</tr>
+<tr>
+<td align="center">Apple, <strong>‘2020-10-5’</strong></td>
+<td align="left">10</td>
+</tr>
+<tr>
+<td align="center">Apple, ‘2020-10-5’</td>
+<td align="left">20</td>
+</tr>
+<tr>
+<td align="center">Banana, ‘2020-10-5’</td>
+<td align="left">20</td>
+</tr>
+<tr>
+<td align="center">Banana, ‘2020-10-5’</td>
+<td align="left">20</td>
+</tr>
+<tr>
+<td align="center">Orange, ‘2020-10-2’</td>
+<td align="left">10</td>
+</tr>
+<tr>
+<td align="center">Orange, ‘2020-10-2’</td>
+<td align="left">10</td>
+</tr>
+<tr>
+<td align="center"></td></td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="center"></tr></td>
+<td align="left"></td>
+</tr>
+</tbody></table>
+</table>
+
+<p><strong>NATURAL JOIN (⋈)</strong></p>
+<p>There are three approaches:</p>
+<ul>
+<li><code>Reduce-side Join</code></li>
+<li><code>Map-side Join</code></li>
+<li><code>In memory Join</code></li>
+</ul>
+<p><strong>Reduce-side Join</strong></p>
+<p>When a join is performed by the reducer, it is called as reduce-side join. For this method, the main thing done on the map stage is put a <code>tag</code> to the files. For example:</p>
+<img src="/2020/11/09/BigData-3/reduce_side_join_example.png" class="" title="Example">
+
+<p>Another illustration is taken from Guru99.</p>
+<img src="/2020/11/09/BigData-3/reduce_side_join_from_guru99.png" class="" title="Example">
+
+<p>In general, this method will work for 1-to-1 join. However, for 1-to-many or many-to-many, it might have a potential problem with memory. To solve the problem, there are two keys:</p>
+<ul>
+<li><code>Save the data into memory, if the memory is not enough, write to disk</code></li>
+<li><code>Value-to-Key conversion</code></li>
+</ul>
+<p><strong>Map-side Join</strong></p>
+<p>No reducer is required. </p>
+<blockquote>
+<p>Suppose we have two datasets that are both sorted by the join key. We can perform a join by scanning through both datasets simultaneously. This is known as a merge join in the database community. We can parallelize this by partitioning and sorting both datasets in the same way. </p>
+</blockquote>
+<p><strong>In memory Join</strong></p>
+<p>Load one dataset into memory, stream over other dataset.</p>
+<p>In general, <code>in-memory join</code> &gt; <code>map-side join</code> &gt; <code>reduce-side join</code>.</p>
+<p>Best choice: when the data is smaller than main memory, prefers in-memory join. If in-memory join is not possible, yet, the file is partitioned according to the key, uses map-side join. Otherwise, use reduce-side join. </p>
+<br/>
+<br/>
+
+<h2 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h2><ul>
+<li><a href="https://www.guru99.com/relational-algebra-dbms.html" target="_blank" rel="noopener">Relational Algebra in DBMS: Operations with Examples</a>  </li>
+<li><a href="https://www.guru99.com/introduction-to-counters-joins-in-map-reduce.html" target="_blank" rel="noopener">Hadoop MapReduce Join &amp; Counter with Example</a>  </li>
+<li><a href="https://blog.csdn.net/sofuzi/article/details/81265402" target="_blank" rel="noopener">MapReduce：实现join的几种方法</a>  </li>
+<li><a href="http://shzhangji.com/cnblogs/2015/01/13/understand-reduce-side-join/" target="_blank" rel="noopener">深入理解 Reduce-side Join</a></li>
+</ul>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://shimingwu.github.io/2020/11/09/BigData-3/" data-id="ckha7v7if000m0qr7b8qe8ebg" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Big-Data/" rel="tag">Big Data</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
     <article id="post-BigData-2" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
     <a href="/2020/11/08/BigData-2/" class="article-date">
@@ -157,7 +637,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://shimingwu.github.io/2020/11/08/BigData-2/" data-id="ckh974ory000hzgu6acgu39sw" class="article-share-link">Share</a>
+      <a data-url="https://shimingwu.github.io/2020/11/08/BigData-2/" data-id="ckha7v7ie000k0qr7g8aebsjk" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Big-Data/" rel="tag">Big Data</a></li></ul>
@@ -222,7 +702,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://shimingwu.github.io/2020/11/08/BigData-1/" data-id="ckh974orx000gzgu6fouf2ebm" class="article-share-link">Share</a>
+      <a data-url="https://shimingwu.github.io/2020/11/08/BigData-1/" data-id="ckha7v7ic000i0qr7hbz23t0n" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Big-Data/" rel="tag">Big Data</a></li></ul>
@@ -269,7 +749,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://shimingwu.github.io/2020/09/26/LeetCode-Largest-Number/" data-id="ckh974orz000jzgu62i77d599" class="article-share-link">Share</a>
+      <a data-url="https://shimingwu.github.io/2020/09/26/LeetCode-Largest-Number/" data-id="ckha7v7ig000o0qr791tv6azc" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Algorithm/" rel="tag">Algorithm</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/LeetCode/" rel="tag">LeetCode</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E7%AE%97%E6%B3%95/" rel="tag">算法</a></li></ul>
@@ -318,7 +798,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://shimingwu.github.io/2020/09/22/LeetCode-Majority-Element-II/" data-id="ckh974os0000lzgu6bhq92zkx" class="article-share-link">Share</a>
+      <a data-url="https://shimingwu.github.io/2020/09/22/LeetCode-Majority-Element-II/" data-id="ckha7v7ii000r0qr7b3lyc7ak" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Algorithm/" rel="tag">Algorithm</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/LeetCode/" rel="tag">LeetCode</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E7%AE%97%E6%B3%95/" rel="tag">算法</a></li></ul>
@@ -468,7 +948,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://shimingwu.github.io/2020/07/21/%E5%85%B3%E4%BA%8EWebpack/" data-id="ckh974osm001ozgu6hlaa00h4" class="article-share-link">Share</a>
+      <a data-url="https://shimingwu.github.io/2020/07/21/%E5%85%B3%E4%BA%8EWebpack/" data-id="ckha7v7j2001r0qr742tr7n3m" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E5%89%8D%E7%AB%AF/" rel="tag">前端</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E5%B7%A5%E5%85%B7/" rel="tag">工具</a></li></ul>
@@ -589,7 +1069,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://shimingwu.github.io/2020/07/20/%E5%85%B3%E4%BA%8EServerless%E7%9A%84%E4%BA%8C%E4%B8%89%E4%BA%8B-BFF/" data-id="ckh974os1000nzgu67gg9fjlo" class="article-share-link">Share</a>
+      <a data-url="https://shimingwu.github.io/2020/07/20/%E5%85%B3%E4%BA%8EServerless%E7%9A%84%E4%BA%8C%E4%B8%89%E4%BA%8B-BFF/" data-id="ckha7v7ij000t0qr75of78kkb" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E5%89%8D%E7%AB%AF/" rel="tag">前端</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E6%9E%B6%E6%9E%84/" rel="tag">架构</a></li></ul>
@@ -753,7 +1233,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://shimingwu.github.io/2020/07/19/%E7%90%86%E8%A7%A3CORS(1)/" data-id="ckh974os4000qzgu61rjfdztb" class="article-share-link">Share</a>
+      <a data-url="https://shimingwu.github.io/2020/07/19/%E7%90%86%E8%A7%A3CORS(1)/" data-id="ckha7v7im000w0qr74zhlbeiw" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E5%AE%89%E5%85%A8%E6%80%A7/" rel="tag">安全性</a></li></ul>
@@ -838,7 +1318,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://shimingwu.github.io/2020/07/09/%E7%90%86%E8%A7%A3OAuth2(1)/" data-id="ckh974os5000rzgu60m9uhf1q" class="article-share-link">Share</a>
+      <a data-url="https://shimingwu.github.io/2020/07/09/%E7%90%86%E8%A7%A3OAuth2(1)/" data-id="ckha7v7in000y0qr7b13gbjeo" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E5%8D%8F%E8%AE%AE/" rel="tag">协议</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E5%AE%89%E5%85%A8%E6%80%A7/" rel="tag">安全性</a></li></ul>
@@ -909,7 +1389,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://shimingwu.github.io/2018/09/19/%E7%90%86%E8%A7%A3Vue%E7%9A%84Render%E6%B8%B2%E6%9F%93%E5%87%BD%E6%95%B0/" data-id="ckh974os6000uzgu6148obprv" class="article-share-link">Share</a>
+      <a data-url="https://shimingwu.github.io/2018/09/19/%E7%90%86%E8%A7%A3Vue%E7%9A%84Render%E6%B8%B2%E6%9F%93%E5%87%BD%E6%95%B0/" data-id="ckha7v7io00100qr75p4dbjp3" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/VueJs/" rel="tag">VueJs</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E5%89%8D%E7%AB%AF/" rel="tag">前端</a></li></ul>
@@ -944,7 +1424,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">Tag Cloud</h3>
     <div class="widget tagcloud">
-      <a href="/tags/Algorithm/" style="font-size: 15px;">Algorithm</a> <a href="/tags/Big-Data/" style="font-size: 15px;">Big Data</a> <a href="/tags/LeetCode/" style="font-size: 15px;">LeetCode</a> <a href="/tags/VueJs/" style="font-size: 10px;">VueJs</a> <a href="/tags/%E5%89%8D%E7%AB%AF/" style="font-size: 20px;">前端</a> <a href="/tags/%E5%8D%8F%E8%AE%AE/" style="font-size: 10px;">协议</a> <a href="/tags/%E5%AE%89%E5%85%A8%E6%80%A7/" style="font-size: 15px;">安全性</a> <a href="/tags/%E5%B7%A5%E5%85%B7/" style="font-size: 10px;">工具</a> <a href="/tags/%E6%9E%B6%E6%9E%84/" style="font-size: 10px;">架构</a> <a href="/tags/%E7%AE%97%E6%B3%95/" style="font-size: 15px;">算法</a>
+      <a href="/tags/Algorithm/" style="font-size: 15px;">Algorithm</a> <a href="/tags/Big-Data/" style="font-size: 20px;">Big Data</a> <a href="/tags/LeetCode/" style="font-size: 15px;">LeetCode</a> <a href="/tags/VueJs/" style="font-size: 10px;">VueJs</a> <a href="/tags/%E5%89%8D%E7%AB%AF/" style="font-size: 20px;">前端</a> <a href="/tags/%E5%8D%8F%E8%AE%AE/" style="font-size: 10px;">协议</a> <a href="/tags/%E5%AE%89%E5%85%A8%E6%80%A7/" style="font-size: 15px;">安全性</a> <a href="/tags/%E5%B7%A5%E5%85%B7/" style="font-size: 10px;">工具</a> <a href="/tags/%E6%9E%B6%E6%9E%84/" style="font-size: 10px;">架构</a> <a href="/tags/%E7%AE%97%E6%B3%95/" style="font-size: 15px;">算法</a>
     </div>
   </div>
 
@@ -966,6 +1446,10 @@
       <ul>
         
           <li>
+            <a href="/2020/11/09/BigData-3/">BigData(3)</a>
+          </li>
+        
+          <li>
             <a href="/2020/11/08/BigData-2/">BigData(2)</a>
           </li>
         
@@ -979,10 +1463,6 @@
         
           <li>
             <a href="/2020/09/22/LeetCode-Majority-Element-II/">LeetCode(229) Majority Element II</a>
-          </li>
-        
-          <li>
-            <a href="/2020/07/21/%E5%85%B3%E4%BA%8EWebpack/">关于Webpack</a>
           </li>
         
       </ul>
