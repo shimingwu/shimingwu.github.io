@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+
+  
+  <title>BigData(7) | Shiming&#39;s Blog</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="This is revision note for NUS master study of CS5425 Big Data Systems for Data Science. Link Analysis AlgorithmsThere are three algorithms involved to compute the importance of nodes in the graph.  Pa">
+<meta property="og:type" content="article">
+<meta property="og:title" content="BigData(7)">
+<meta property="og:url" content="https://shimingwu.github.io/2020/11/10/BigData-7/index.html">
+<meta property="og:site_name" content="Shiming&#39;s Blog">
+<meta property="og:description" content="This is revision note for NUS master study of CS5425 Big Data Systems for Data Science. Link Analysis AlgorithmsThere are three algorithms involved to compute the importance of nodes in the graph.  Pa">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://shimingwu.github.io/2020/11/10/BigData-7/flow_equation.png">
+<meta property="og:image" content="https://shimingwu.github.io/2020/11/10/BigData-7/illustration_random_teleport.png">
+<meta property="og:image" content="https://shimingwu.github.io/2020/11/10/BigData-7/illustration_random_teleport_calculation.png">
+<meta property="og:image" content="https://shimingwu.github.io/2020/11/10/BigData-7/HITS_flow.png">
+<meta property="article:published_time" content="2020-11-10T21:30:24.000Z">
+<meta property="article:modified_time" content="2020-11-10T13:34:28.020Z">
+<meta property="article:author" content="Shiming Wu">
+<meta property="article:tag" content="Big Data">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://shimingwu.github.io/2020/11/10/BigData-7/flow_equation.png">
+  
+    <link rel="alternate" href="/atom.xml" title="Shiming&#39;s Blog" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+<meta name="generator" content="Hexo 4.2.1"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Shiming&#39;s Blog</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="https://shimingwu.github.io"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-BigData-7" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/11/10/BigData-7/" class="article-date">
+  <time datetime="2020-11-10T21:30:24.000Z" itemprop="datePublished">2020-11-10</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      BigData(7)
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>This is revision note for NUS master study of CS5425 Big Data Systems for Data Science.</p>
+<h2 id="Link-Analysis-Algorithms"><a href="#Link-Analysis-Algorithms" class="headerlink" title="Link Analysis Algorithms"></a>Link Analysis Algorithms</h2><p>There are three algorithms involved to compute the <strong>importance</strong> of nodes in the graph.</p>
+<ul>
+<li><code>Page Rank</code></li>
+<li><code>Topic-Specific (Personalized) Page Rank</code></li>
+<li><code>Web Spam Detection Algorithms</code></li>
+</ul>
+<h2 id="Page-Rank"><a href="#Page-Rank" class="headerlink" title="Page Rank"></a>Page Rank</h2><p>In page rank, the higher the score, the more important a node is. There is one important property of this algorithm, <strong>a page is important if it is pointed by other important pages.</strong></p>
+<img src="/2020/11/10/BigData-7/flow_equation.png" class="" title="flow_equation">
+
+<p>A flow equation is used to describe the rank.</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">For node a, we can see that there are 2 outgoing links, each of the link will have a&#x2F;2.</span><br><span class="line">Similarly, node y has two outgoings, so each link is y&#x2F;2.</span><br><span class="line">For node m, only one outgoing, thus, link has m.</span><br><span class="line"></span><br><span class="line">To get the rank of y, sum up all incoming links:</span><br><span class="line">y&#x2F;2 + a&#x2F;2</span><br><span class="line"></span><br><span class="line">To get the rank of a, sum up all incoming links:</span><br><span class="line">y&#x2F;2 + m</span><br><span class="line"></span><br><span class="line">To get the rank of m, sum up all incoming links:</span><br><span class="line">a&#x2F;2</span><br></pre></td></tr></table></figure>
+<p>Thus, the flow equation is:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">ry &#x3D; ry&#x2F;2 + ra&#x2F;2</span><br><span class="line">ra &#x3D; ry&#x2F;2 + rm</span><br><span class="line">rm &#x3D; ra&#x2F;2</span><br></pre></td></tr></table></figure>
+<p>As there are three unknowns, three equations without constants, we add one more constraint to force the uniqueness:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ry + ra + rm &#x3D; 1</span><br></pre></td></tr></table></figure>
+<p>With this, we are able to calculate the page rank. However, the calculation will be very heavy when there is a large number of nodes.</p>
+<h2 id="Power-iteration"><a href="#Power-iteration" class="headerlink" title="Power iteration"></a>Power iteration</h2><p>There are two parts involved in <code>power iteration</code>:</p>
+<ul>
+<li><code>Stochastic adjacency matrix M</code></li>
+<li><code>Eigenvector</code></li>
+</ul>
+<p>From above, we can build a stochastic adjacency matrix M:</p>
+
+
+<p>Apply the power iteration:</p>
+
+
+<h2 id="Random-Teleports"><a href="#Random-Teleports" class="headerlink" title="Random Teleports"></a>Random Teleports</h2><ol>
+<li><p><strong>Dead Ends</strong>. The result might not converge:<br>Node <code>A</code> points to Node <code>B</code> and Node B points to Node <code>A</code>, <code>A</code> &lt;—&gt; <code>B</code></p>
+</li>
+<li><p><strong>Spider traps</strong>. Importance information leaks out:<br>Node <code>A</code> points to Node <code>B</code>, <code>A</code> —&gt; <code>B</code></p>
+</li>
+</ol>
+<p>To solve these, <code>Teleports</code> is introduced by Google. The solution is that in each ‘flow’, it has certain opportunity to jump to other nodes (not the linked one).</p>
+<img src="/2020/11/10/BigData-7/illustration_random_teleport.png" class="" title="illustration_random_teleport">
+<img src="/2020/11/10/BigData-7/illustration_random_teleport_calculation.png" class="" title="illustration_random_teleport_calculation">
+
+<h2 id="Topic-Specific-PageRank"><a href="#Topic-Specific-PageRank" class="headerlink" title="Topic-Specific PageRank"></a>Topic-Specific PageRank</h2><p>The evaluation is not just conducted for the popularity but on the topic as well. To achieve this, the probability assigned for teleport is not consistent for all nodes. Instead, <strong>when a walker teleports, only a page in a set S which only includes pages are relevant to the topic will be picked.</strong></p>
+<h2 id="SimRank"><a href="#SimRank" class="headerlink" title="SimRank"></a>SimRank</h2><blockquote>
+<p>Effectively, SimRank is a measure that says “two objects are considered to be similar if they are referenced by similar objects.”</p>
+</blockquote>
+<h2 id="TrustRank"><a href="#TrustRank" class="headerlink" title="TrustRank"></a>TrustRank</h2><ul>
+<li><code>Link Farms</code>: <code>Inaccessible pages</code>, <code>Accessible pages</code> and <code>Owned pages</code></li>
+</ul>
+<h2 id="HITS"><a href="#HITS" class="headerlink" title="HITS"></a>HITS</h2><ul>
+<li><code>Hubs</code> and <code>Authorities</code></li>
+</ul>
+<p><strong>Hubs</strong><br>Quality as an expert. Total sum of votes for authorities pointed to.</p>
+<p><strong>Authority</strong><br>Quality as a content. Total sum of votes coming from experts.</p>
+<blockquote>
+<p>Authorities are pages containing useful information like Newspaper home pages, Course home pages and Home pages of auto manufacturers</p>
+</blockquote>
+<blockquote>
+<p>Hubs are pages that link to authorities like List of newspapers, Course bulletin and List of US auto manufacturers</p>
+</blockquote>
+<img src="/2020/11/10/BigData-7/HITS_flow.png" class="" title="HITS_flow">
+
+
+
+<h2 id="Difference-between-PageRank-and-HITS"><a href="#Difference-between-PageRank-and-HITS" class="headerlink" title="Difference between PageRank and HITS"></a>Difference between PageRank and HITS</h2><ul>
+<li>In the PageRank model, the value of the link depends on the <strong>links into u</strong></li>
+<li>In the HITS model, it depends on the value of the other <strong>links out of u</strong></li>
+</ul>
+<h2 id="Pregel"><a href="#Pregel" class="headerlink" title="Pregel"></a>Pregel</h2><p>Pregel is serving as a computational model. There are four basic elements in Pregel model:</p>
+<ul>
+<li><code>Vertex</code>: In Pregel, each node(vertex) has an unique ID</li>
+<li><code>Edge</code>: In Pregel, each edge can be assigned with a property</li>
+<li><code>Message</code>: Message is the core design in Pregel. Message is used to indicate the status of a vertex.</li>
+<li><code>Superstep</code>: One superstep is an iteration of computation happens in the Pregel.</li>
+</ul>
+<p>In Pregel, for each vertex at each superstep, it will receive a set of messages from previous superstep. The vertex will process all the messages then emit these messages to other vertex.</p>
+<br/>
+<br/>
+
+<h2 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h2><ul>
+<li><a href="https://cloud.tencent.com/developer/news/148367" target="_blank" rel="noopener">Pregel总结</a></li>
+<li><a href="https://io-meter.com/2018/03/23/pregel-in-graphs/" target="_blank" rel="noopener">图解图算法 Pregel: 模型简介与实战案例</a></li>
+<li><a href="https://cshihong.github.io/2018/05/30/Pregel%EF%BC%88%E5%9B%BE%E8%AE%A1%E7%AE%97%EF%BC%89%E6%8A%80%E6%9C%AF%E5%8E%9F%E7%90%86/" target="_blank" rel="noopener">Pregel（图计算）技术原理</a></li>
+</ul>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://shimingwu.github.io/2020/11/10/BigData-7/" data-id="ckhc0no8x000w26sf3cv2catv" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Big-Data/" rel="tag">Big Data</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+  
+    <a href="/2020/11/10/BigData-4/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">BigData(4)</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Algorithm/" rel="tag">Algorithm</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Big-Data/" rel="tag">Big Data</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/LeetCode/" rel="tag">LeetCode</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/VueJs/" rel="tag">VueJs</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%89%8D%E7%AB%AF/" rel="tag">前端</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%8D%8F%E8%AE%AE/" rel="tag">协议</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%AE%89%E5%85%A8%E6%80%A7/" rel="tag">安全性</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%B7%A5%E5%85%B7/" rel="tag">工具</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%9E%B6%E6%9E%84/" rel="tag">架构</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%AE%97%E6%B3%95/" rel="tag">算法</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/Algorithm/" style="font-size: 13.33px;">Algorithm</a> <a href="/tags/Big-Data/" style="font-size: 20px;">Big Data</a> <a href="/tags/LeetCode/" style="font-size: 13.33px;">LeetCode</a> <a href="/tags/VueJs/" style="font-size: 10px;">VueJs</a> <a href="/tags/%E5%89%8D%E7%AB%AF/" style="font-size: 16.67px;">前端</a> <a href="/tags/%E5%8D%8F%E8%AE%AE/" style="font-size: 10px;">协议</a> <a href="/tags/%E5%AE%89%E5%85%A8%E6%80%A7/" style="font-size: 13.33px;">安全性</a> <a href="/tags/%E5%B7%A5%E5%85%B7/" style="font-size: 10px;">工具</a> <a href="/tags/%E6%9E%B6%E6%9E%84/" style="font-size: 10px;">架构</a> <a href="/tags/%E7%AE%97%E6%B3%95/" style="font-size: 13.33px;">算法</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/11/">November 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/09/">September 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/07/">July 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/09/">September 2018</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2020/11/10/BigData-7/">BigData(7)</a>
+          </li>
+        
+          <li>
+            <a href="/2020/11/10/BigData-4/">BigData(4)</a>
+          </li>
+        
+          <li>
+            <a href="/2020/11/10/BigData-6/">BigData(6)</a>
+          </li>
+        
+          <li>
+            <a href="/2020/11/09/BigData-5/">BigData(5)</a>
+          </li>
+        
+          <li>
+            <a href="/2020/11/09/BigData-3/">BigData(3)</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2020 Shiming Wu<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+
+  
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+  </div>
+</body>
+</html>

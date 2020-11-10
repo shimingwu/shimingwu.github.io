@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+
+  
+  <title>BigData(5) | Shiming&#39;s Blog</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="This is revision note for NUS master study of CS5425 Big Data Systems for Data Science. Hadoop VS Databases Apache Hadoop is not a database storage or relational storage, its main competency is to pro">
+<meta property="og:type" content="article">
+<meta property="og:title" content="BigData(5)">
+<meta property="og:url" content="https://shimingwu.github.io/2020/11/09/BigData-5/index.html">
+<meta property="og:site_name" content="Shiming&#39;s Blog">
+<meta property="og:description" content="This is revision note for NUS master study of CS5425 Big Data Systems for Data Science. Hadoop VS Databases Apache Hadoop is not a database storage or relational storage, its main competency is to pro">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2020-11-09T20:35:18.000Z">
+<meta property="article:modified_time" content="2020-11-10T13:34:28.020Z">
+<meta property="article:author" content="Shiming Wu">
+<meta property="article:tag" content="Big Data">
+<meta name="twitter:card" content="summary">
+  
+    <link rel="alternate" href="/atom.xml" title="Shiming&#39;s Blog" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+<meta name="generator" content="Hexo 4.2.1"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Shiming&#39;s Blog</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="https://shimingwu.github.io"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-BigData-5" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/11/09/BigData-5/" class="article-date">
+  <time datetime="2020-11-09T20:35:18.000Z" itemprop="datePublished">2020-11-09</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      BigData(5)
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>This is revision note for NUS master study of CS5425 Big Data Systems for Data Science.</p>
+<h2 id="Hadoop-VS-Databases"><a href="#Hadoop-VS-Databases" class="headerlink" title="Hadoop VS Databases"></a>Hadoop VS Databases</h2><blockquote>
+<p>Apache Hadoop is not a database storage or relational storage, its main competency is to process data in a distributed fashion. It does have a storage component called HDFS (Hadoop Distributed File System) which stoes files used for processing but HDFS does not qualify as a relational database, it is just a storage model.</p>
+</blockquote>
+<blockquote>
+<p>There are components like Hive which can work on top of HDFS and which allows users to query the HDFS storage using SQL like queries using HiveQL but that is just SQL like queries and does not make HDFS or Apcahe Hadoop a database or relational database.</p>
+</blockquote>
+<p>Thus, Hadoop is not a database even though it has a storage system HDFS. But can Hadoop replace the existing database? The answer is uncertain.</p>
+<p>Firstly, schema is supported by relational database. Schema has its own advantages like it defines the contract of data format and it decouples the logical from physical. Moreover, with schema, there is no need to parse the data to get related fields. </p>
+<p>Secondly, column stores are good. Compared to the row stores, a column store has advantages like:</p>
+<ul>
+<li><code>Read efficiency</code>: Usually only few columns will be selected for a query</li>
+<li><code>Better compression</code>: Data under same column will have the same data type.</li>
+<li><code>Vectorized processing</code><blockquote>
+<p>SIMD(Single Instruction Multiple Data)即单指令流多数据流，是一种采用一个控制器来控制多个处理器，同时对一组数据（又称“数据向量”）中的每一个分别执行相同的操作从而实现空间上的并行性的技术。简单来说就是一个指令能够同时处理多个数据。</p>
+</blockquote>
+</li>
+<li><code>Opportunities to operate directly on compressed data</code></li>
+</ul>
+<h2 id="HadoopDB"><a href="#HadoopDB" class="headerlink" title="HadoopDB"></a>HadoopDB</h2><p>HadoopDB is an idea where co-locate a RDBMS on every slave node.</p>
+<h2 id="Hive"><a href="#Hive" class="headerlink" title="Hive"></a>Hive</h2><ul>
+<li><code>Thrift</code>: To support schema on Hadoop</li>
+<li><code>HDFS Block</code>: In each HDFS block, RCFile organizes the records with the basic unit of a row group. </li>
+<li><code>User Defined Functions (UDF)</code>: Provide index</li>
+</ul>
+<h2 id="YARN-Yet-Another-Resource-Negotiator"><a href="#YARN-Yet-Another-Resource-Negotiator" class="headerlink" title="YARN - Yet Another Resource Negotiator"></a>YARN - Yet Another Resource Negotiator</h2><p>Yarn provides resource management and a central platform to deliver consistent operations, security and data governance tools across Hadoop clusters.</p>
+<blockquote>
+<p>By separating resource management functions from the programming model, YARN delegates many scheduling-related functions to per-job components.</p>
+</blockquote>
+<h2 id="Dryad-Graph-Operators"><a href="#Dryad-Graph-Operators" class="headerlink" title="Dryad - Graph Operators"></a>Dryad - Graph Operators</h2><p>Dryad is a general-purpose distributed execution engine for coarse-grain data-parallel applications. </p>
+<h2 id="Spark"><a href="#Spark" class="headerlink" title="Spark"></a>Spark</h2><p>There are two problems with MapReduce:</p>
+<ul>
+<li>Programming language is Java</li>
+<li>Each MapReduce job will be written into disk, the shuffle is a bottleneck</li>
+</ul>
+<p>Spark is a solution that extends the MapReduce.</p>
+<h2 id="Presto"><a href="#Presto" class="headerlink" title="Presto"></a>Presto</h2><p>There are three roles in the Presto query execution:</p>
+<ul>
+<li><code>Coordinator</code>: analyze and schedule</li>
+<li><code>Discovery</code>: heartbeat and role managements</li>
+<li><code>Worker</code>: execute</li>
+</ul>
+<p>The query sent by the presto-cli is a HTTP POST request, and it will be sent to the coordinator. In side the coordinator, the query will be parsed to an Abstract Syntax Tree (AST), then analyzer will convert it to the logical query plan &amp; distributed query plan, the optimizer will make it as optimized query plan, and sent to execution planner.</p>
+<blockquote>
+<p>抽象语法树树，描述的最原始的用户需求。抽象语法树描述的信息，执行效率上不是最优，执行操作也过于复杂。需要把抽象语法树转化成执行计划。执行计划分成两类，一类是逻辑执行计划，一类是物理执行计划。逻辑执行计划，以树状结构来描述执行，每个节点是最简单的操作。物理执行计划，根据逻辑执行计划生成字节码，交由驱动执行。</p>
+</blockquote>
+<br/>
+<br/>
+
+<h2 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h2><ul>
+<li><a href="https://examples.javacodegeeks.com/enterprise-java/apache-hadoop/is-hadoop-a-database/" target="_blank" rel="noopener">Is Hadoop a database</a></li>
+<li><a href="https://zhuanlan.zhihu.com/p/55108455" target="_blank" rel="noopener">深入浅出Hadoop YARN</a></li>
+<li><a href="https://chu888chu888.gitbooks.io/hadoopstudy/content/Content/8/chapter8.html" target="_blank" rel="noopener">第八章 Hive的安装与数据导入导出</a></li>
+<li><a href="https://chu888chu888.gitbooks.io/hadoopstudy/content/Content/3/chapter0301.html" target="_blank" rel="noopener">Hadoop的一些基本概念</a></li>
+<li><a href="https://tech.meituan.com/2014/06/16/presto.html" target="_blank" rel="noopener">Presto实现原理和美团的使用实践</a></li>
+<li><a href="https://blog.csdn.net/sjtuyunlei/article/details/79382979" target="_blank" rel="noopener">深入理解Presto(2) ：Presto查询执行过程</a></li>
+</ul>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://shimingwu.github.io/2020/11/09/BigData-5/" data-id="ckhc0no8u000r26sf924i992o" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Big-Data/" rel="tag">Big Data</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2020/11/10/BigData-6/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          BigData(6)
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2020/11/09/BigData-3/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">BigData(3)</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Algorithm/" rel="tag">Algorithm</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Big-Data/" rel="tag">Big Data</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/LeetCode/" rel="tag">LeetCode</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/VueJs/" rel="tag">VueJs</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%89%8D%E7%AB%AF/" rel="tag">前端</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%8D%8F%E8%AE%AE/" rel="tag">协议</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%AE%89%E5%85%A8%E6%80%A7/" rel="tag">安全性</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%B7%A5%E5%85%B7/" rel="tag">工具</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%9E%B6%E6%9E%84/" rel="tag">架构</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%AE%97%E6%B3%95/" rel="tag">算法</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/Algorithm/" style="font-size: 13.33px;">Algorithm</a> <a href="/tags/Big-Data/" style="font-size: 20px;">Big Data</a> <a href="/tags/LeetCode/" style="font-size: 13.33px;">LeetCode</a> <a href="/tags/VueJs/" style="font-size: 10px;">VueJs</a> <a href="/tags/%E5%89%8D%E7%AB%AF/" style="font-size: 16.67px;">前端</a> <a href="/tags/%E5%8D%8F%E8%AE%AE/" style="font-size: 10px;">协议</a> <a href="/tags/%E5%AE%89%E5%85%A8%E6%80%A7/" style="font-size: 13.33px;">安全性</a> <a href="/tags/%E5%B7%A5%E5%85%B7/" style="font-size: 10px;">工具</a> <a href="/tags/%E6%9E%B6%E6%9E%84/" style="font-size: 10px;">架构</a> <a href="/tags/%E7%AE%97%E6%B3%95/" style="font-size: 13.33px;">算法</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/11/">November 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/09/">September 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/07/">July 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/09/">September 2018</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2020/11/10/BigData-7/">BigData(7)</a>
+          </li>
+        
+          <li>
+            <a href="/2020/11/10/BigData-4/">BigData(4)</a>
+          </li>
+        
+          <li>
+            <a href="/2020/11/10/BigData-6/">BigData(6)</a>
+          </li>
+        
+          <li>
+            <a href="/2020/11/09/BigData-5/">BigData(5)</a>
+          </li>
+        
+          <li>
+            <a href="/2020/11/09/BigData-3/">BigData(3)</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2020 Shiming Wu<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+
+  
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+  </div>
+</body>
+</html>
