@@ -1,2 +1,2 @@
 # shimingwu.github.io
-A repository for [person blog](shimingwu.github.io)
+A repository for [person blog](https://shimingwu.github.io)
