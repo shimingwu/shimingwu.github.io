@@ -26,6 +26,8 @@ There are two types of RDD:
 
 The operations on RDDs are not computed immediately. Instead, only certain actions will trigger the computation, for example, `count`, `saveAsTextFile`.
 
+RDDs track lineage information to reconstruct lost partitions.
+
 ## DataFrame
 
 Spark SQL is a Spark module for structured data processing. There are several ways to interact with Spark SQL including SQL and the Dataset API and with the extra information to perform extra optimizations, and a DataFrame is a Dataset organized into named columns. The image below shows the general idea.
@@ -78,3 +80,4 @@ c.sql("select user.name from tweets")
 ## Reference
 - [Spark SQL, DataFrame 和 Dataset 编程指南](https://spark-reference-doc-cn.readthedocs.io/zh_CN/latest/programming-guide/sql-guide.html)
 - [Spark SQL, DataFrames and Datasets Guide](https://spark.apache.org/docs/latest/sql-programming-guide.html)
+- [spark2.0原理分析--RDD血缘（RDD Lineage）](https://blog.csdn.net/zg_hover/article/details/73159212)
