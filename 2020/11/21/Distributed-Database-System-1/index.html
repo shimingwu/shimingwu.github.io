@@ -5,22 +5,21 @@
   
 
   
-  <title>BigData(6) | Shiming&#39;s Blog</title>
+  <title>Distributed Database System (1) | Shiming&#39;s Blog</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="This is revision note for NUS master study of CS5425 Big Data Systems for Data Science. SparkSpark generalizes the MapReduce to provide the following features:  High performance Better programmability">
+  <meta name="description" content="This is revision note for NUS master study of CS5424 Distributed Databases. Modern Distributed DBMSHistory Relational DBMS: Initially targeted at business processingapplications  OLTP &#x3D; On-Line Transa">
 <meta property="og:type" content="article">
-<meta property="og:title" content="BigData(6)">
-<meta property="og:url" content="https://shimingwu.github.io/2020/11/10/BigData-6/index.html">
+<meta property="og:title" content="Distributed Database System (1)">
+<meta property="og:url" content="https://shimingwu.github.io/2020/11/21/Distributed-Database-System-1/index.html">
 <meta property="og:site_name" content="Shiming&#39;s Blog">
-<meta property="og:description" content="This is revision note for NUS master study of CS5425 Big Data Systems for Data Science. SparkSpark generalizes the MapReduce to provide the following features:  High performance Better programmability">
+<meta property="og:description" content="This is revision note for NUS master study of CS5424 Distributed Databases. Modern Distributed DBMSHistory Relational DBMS: Initially targeted at business processingapplications  OLTP &#x3D; On-Line Transa">
 <meta property="og:locale" content="en_US">
-<meta property="og:image" content="https://shimingwu.github.io/2020/11/10/BigData-6/SparkSQL.png">
-<meta property="article:published_time" content="2020-11-10T13:24:56.000Z">
+<meta property="article:published_time" content="2020-11-21T18:52:59.000Z">
 <meta property="article:modified_time" content="2020-11-22T08:46:24.636Z">
 <meta property="article:author" content="Shiming Wu">
-<meta property="article:tag" content="Big Data">
+<meta property="article:tag" content="Distributed Database">
+<meta property="article:tag" content="Data Structure">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://shimingwu.github.io/2020/11/10/BigData-6/SparkSQL.png">
   
     <link rel="alternate" href="/atom.xml" title="Shiming&#39;s Blog" type="application/atom+xml">
   
@@ -69,10 +68,10 @@
   </div>
 </header>
       <div class="outer">
-        <section id="main"><article id="post-BigData-6" class="article article-type-post" itemscope itemprop="blogPost">
+        <section id="main"><article id="post-Distributed-Database-System-1" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
-    <a href="/2020/11/10/BigData-6/" class="article-date">
-  <time datetime="2020-11-10T13:24:56.000Z" itemprop="datePublished">2020-11-10</time>
+    <a href="/2020/11/21/Distributed-Database-System-1/" class="article-date">
+  <time datetime="2020-11-21T18:52:59.000Z" itemprop="datePublished">2020-11-21</time>
 </a>
     
   </div>
@@ -83,7 +82,7 @@
         
   
     <h1 class="article-title" itemprop="name">
-      BigData(6)
+      Distributed Database System (1)
     </h1>
   
 
@@ -91,60 +90,78 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p>This is revision note for NUS master study of CS5425 Big Data Systems for Data Science.</p>
-<h2 id="Spark"><a href="#Spark" class="headerlink" title="Spark"></a>Spark</h2><p>Spark generalizes the MapReduce to provide the following features:</p>
-<ul>
-<li><code>High performance</code></li>
-<li><code>Better programmability</code></li>
-<li><code>A unified engine</code></li>
+        <p>This is revision note for NUS master study of CS5424 Distributed Databases.</p>
+<h2 id="Modern-Distributed-DBMS"><a href="#Modern-Distributed-DBMS" class="headerlink" title="Modern Distributed DBMS"></a>Modern Distributed DBMS</h2><h3 id="History"><a href="#History" class="headerlink" title="History"></a>History</h3><ul>
+<li>Relational DBMS:<ul>
+<li>Initially targeted at business processing<br>applications </li>
+<li>OLTP = On-Line Transaction Processing</li>
+<li>Characteristics: small update ACID transactions</li>
 </ul>
-<h2 id="RDD-Resilient-Distributed-Datasets"><a href="#RDD-Resilient-Distributed-Datasets" class="headerlink" title="RDD (Resilient Distributed Datasets)"></a>RDD (Resilient Distributed Datasets)</h2><p>RDD is the core abstraction. </p>
+</li>
+<li>Early distributed DBMS:<ul>
+<li>Targeted to support the organizational structure<br>of distributed enterprises</li>
+</ul>
+</li>
+<li>Parallel DBMS:<ul>
+<li>Targeted at decision support systems (DSSs)</li>
+<li>OLAP = On-line Analytical Processing</li>
+<li>Characteristics: Complex read-mostly queries on large data</li>
+</ul>
+</li>
+</ul>
+<h3 id="NewSQL-Database-Systems"><a href="#NewSQL-Database-Systems" class="headerlink" title="NewSQL Database Systems"></a>NewSQL Database Systems</h3><ul>
+<li>Targeted at OLTP workloads</li>
+<li>Features<ul>
+<li>Relational data model</li>
+<li>SQL query language</li>
+<li>ACID transactions</li>
+<li>Runs on distributed cluster of shared-nothing nodes</li>
+</ul>
+</li>
+</ul>
 <blockquote>
-<p>Collections of objects spread across a cluster, stored in RAM or on Disk. Built through parallel transformations and automatically rebuilt on failure</p>
+<p>NewSQL Database Systems: Relational DB can be scaled. It is designed in a distributed way to provide rational DB.</p>
 </blockquote>
-<p>There are two types of RDD:</p>
-<ul>
-<li><code>Parallelized collections</code>: take an existing single-node collection and parallel it</li>
-<li><code>Hadoop datasets</code>: files on HDFS or other compatible storage</li>
+<h2 id="Review-of-Relational-Algebra"><a href="#Review-of-Relational-Algebra" class="headerlink" title="Review of Relational Algebra"></a>Review of Relational Algebra</h2><ul>
+<li><p><code>σA&gt;5</code></p>
+<p>SELECT * FROM R WHERE A &gt; 5</p>
+</li>
+<li><p><code>πX,Y,Z (R)</code></p>
+<p>SELECT DISTINCT X, Y, Z FROM R</p>
+</li>
+<li><p><code>R ⊳⊲A S</code></p>
+<p>SELECT * FROM R JOIN S ON R.A = S.A</p>
+</li>
+<li><p><code>R ⋉A S</code></p>
+<p>SELECT * FROM R WHERE EXISTS (SELECT * FROM S WHERE R.A = S.A)</p>
+</li>
 </ul>
-<p>The operations on RDDs are not computed immediately. Instead, only certain actions will trigger the computation, for example, <code>count</code>, <code>saveAsTextFile</code>.</p>
-<p>RDDs track lineage information to reconstruct lost partitions.</p>
-<h2 id="DataFrame"><a href="#DataFrame" class="headerlink" title="DataFrame"></a>DataFrame</h2><p>Spark SQL is a Spark module for structured data processing. There are several ways to interact with Spark SQL including SQL and the Dataset API and with the extra information to perform extra optimizations, and a DataFrame is a Dataset organized into named columns. The image below shows the general idea.</p>
-<img src="/2020/11/10/BigData-6/SparkSQL.png" class="" title="SparkSQL">
-
-<p>DataFrames hold a row with schema information and provides a relational operations regarding the schema.</p>
-<h2 id="Directions-for-Spark"><a href="#Directions-for-Spark" class="headerlink" title="Directions for Spark"></a>Directions for Spark</h2><ul>
-<li><code>Multi-core scalability</code></li>
-<li><code>Continuous (streaming) applications</code></li>
+<h2 id="Review-of-ACID-Transactions"><a href="#Review-of-ACID-Transactions" class="headerlink" title="Review of ACID Transactions"></a>Review of ACID Transactions</h2><ul>
+<li>Atomicity: Transaction is either executed completely or not at all</li>
+<li>Consistency: Transaction preserves database consistency</li>
+<li>Isolation: Execution of a Transaction is isolated from other Transaction</li>
+<li>Durability: If a Transaction commits, its effects persist</li>
 </ul>
-<h2 id="Challenges-faced-for-numerical-computation-over-big-data"><a href="#Challenges-faced-for-numerical-computation-over-big-data" class="headerlink" title="Challenges faced for numerical computation over big data"></a>Challenges faced for numerical computation over big data</h2><ul>
-<li><code>Correctness</code></li>
-<li><code>Performance</code>: Cache RDDs to avoid I/O and avoid unnecessary computation</li>
-<li><code>Trade-off between accuracy and performance</code></li>
+<h2 id="Serial-Schedules"><a href="#Serial-Schedules" class="headerlink" title="Serial Schedules:"></a>Serial Schedules:</h2><ul>
+<li>所有事务排队，没有并发</li>
 </ul>
-<h2 id="Spark-libraries"><a href="#Spark-libraries" class="headerlink" title="Spark libraries"></a>Spark libraries</h2><p>There are many libraries in Spark to support common algorithms, like GraphX, MLlib, etc.</p>
-<ul>
-<li><code>GraphX</code>: A general graph processing library. It builds the graph using RDDs of nodes and edges.</li>
-<li><code>Spark streaming</code>: It will split the live stream into different chunks and each chunk of data will be treated as RDDs and the processed results will be returned in batches.</li>
-<li><code>Spark SQL</code>: Enables to save and query the structured data in Spark.<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  &quot;text&quot;: &quot;Example&quot;,</span><br><span class="line">  &quot;user&quot;: &#123;</span><br><span class="line">    &quot;name&quot;: &quot;Mike&quot;,</span><br><span class="line">    &quot;id:1</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">To query from Json, we can have:</span><br><span class="line">c.sql(&quot;select user.name from tweets&quot;)</span><br></pre></td></tr></table></figure></li>
-<li><code>MLlib</code>: Support different machine learning algorithms</li>
+<h2 id="Serializable-Schedule："><a href="#Serializable-Schedule：" class="headerlink" title="Serializable Schedule："></a>Serializable Schedule：</h2><ul>
+<li>有并发，但存在一个完全等价的serial schedule</li>
+<li>往往指代conflict serializable，即没有以下：<ul>
+<li>Read-write conflict</li>
+<li>Write-read conflict</li>
+<li>Write-write conflict</li>
 </ul>
-<br/>
-<br/>
-
-<h2 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h2><ul>
-<li><a href="https://spark-reference-doc-cn.readthedocs.io/zh_CN/latest/programming-guide/sql-guide.html" target="_blank" rel="noopener">Spark SQL, DataFrame 和 Dataset 编程指南</a></li>
-<li><a href="https://spark.apache.org/docs/latest/sql-programming-guide.html" target="_blank" rel="noopener">Spark SQL, DataFrames and Datasets Guide</a></li>
-<li><a href="https://blog.csdn.net/zg_hover/article/details/73159212" target="_blank" rel="noopener">spark2.0原理分析–RDD血缘（RDD Lineage）</a></li>
+</li>
 </ul>
 
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://shimingwu.github.io/2020/11/10/BigData-6/" data-id="ckhsvnfx8000qzxr18gce0r2a" class="article-share-link">Share</a>
+      <a data-url="https://shimingwu.github.io/2020/11/21/Distributed-Database-System-1/" data-id="ckhsvnfxb000vzxr101h7cmds" class="article-share-link">Share</a>
       
       
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Big-Data/" rel="tag">Big Data</a></li></ul>
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Data-Structure/" rel="tag">Data Structure</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Distributed-Database/" rel="tag">Distributed Database</a></li></ul>
 
     </footer>
   </div>
@@ -152,19 +169,19 @@
     
 <nav id="article-nav">
   
-    <a href="/2020/11/10/BigData-4/" id="article-nav-newer" class="article-nav-link-wrap">
+    <a href="/2020/11/21/Distributed-Database-System-2/" id="article-nav-newer" class="article-nav-link-wrap">
       <strong class="article-nav-caption">Newer</strong>
       <div class="article-nav-title">
         
-          BigData(4)
+          Distributed Database System (2)
         
       </div>
     </a>
   
   
-    <a href="/2020/11/09/BigData-5/" id="article-nav-older" class="article-nav-link-wrap">
+    <a href="/2020/11/12/BigData-8/" id="article-nav-older" class="article-nav-link-wrap">
       <strong class="article-nav-caption">Older</strong>
-      <div class="article-nav-title">BigData(5)</div>
+      <div class="article-nav-title">BigData(8)</div>
     </a>
   
 </nav>

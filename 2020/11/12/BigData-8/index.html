@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+
+  
+  <title>BigData(8) | Shiming&#39;s Blog</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="This is revision note for NUS master study of CS5425 Big Data Systems for Data Science. Data StreamData stream is a sequence of items. There are two problems with data stream:  We are not able to stor">
+<meta property="og:type" content="article">
+<meta property="og:title" content="BigData(8)">
+<meta property="og:url" content="https://shimingwu.github.io/2020/11/12/BigData-8/index.html">
+<meta property="og:site_name" content="Shiming&#39;s Blog">
+<meta property="og:description" content="This is revision note for NUS master study of CS5425 Big Data Systems for Data Science. Data StreamData stream is a sequence of items. There are two problems with data stream:  We are not able to stor">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2020-11-12T17:51:50.000Z">
+<meta property="article:modified_time" content="2020-11-22T08:46:24.636Z">
+<meta property="article:author" content="Shiming Wu">
+<meta property="article:tag" content="Big Data">
+<meta name="twitter:card" content="summary">
+  
+    <link rel="alternate" href="/atom.xml" title="Shiming&#39;s Blog" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+<meta name="generator" content="Hexo 4.2.1"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Shiming&#39;s Blog</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="https://shimingwu.github.io"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-BigData-8" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/11/12/BigData-8/" class="article-date">
+  <time datetime="2020-11-12T17:51:50.000Z" itemprop="datePublished">2020-11-12</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      BigData(8)
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>This is revision note for NUS master study of CS5425 Big Data Systems for Data Science.</p>
+<h2 id="Data-Stream"><a href="#Data-Stream" class="headerlink" title="Data Stream"></a>Data Stream</h2><p>Data stream is a sequence of items. There are two problems with data stream:</p>
+<ul>
+<li>We are not able to store all data</li>
+<li>We are not able to exam every single item</li>
+</ul>
+<p>There are multiple challenges faced by stream processing:</p>
+<ul>
+<li>The data itself is high volume, arrival speed is fast</li>
+<li>Machine only has limited memory and storage</li>
+<li>The latency requirement is strict</li>
+<li>Load balancing</li>
+<li>The message delivery is unreliable</li>
+<li>Fault tolerance</li>
+<li>…</li>
+</ul>
+<h2 id="General-Strategies"><a href="#General-Strategies" class="headerlink" title="General Strategies"></a>General Strategies</h2><ul>
+<li><code>Sampling</code>: Reduce the number of data items</li>
+<li><code>Hashing</code>: Reduce computation overhead and/or data size</li>
+</ul>
+<h2 id="Reservoir-Sampling"><a href="#Reservoir-Sampling" class="headerlink" title="Reservoir Sampling"></a>Reservoir Sampling</h2><p>Usually, if we want to take samples, we need to know all N data points then take the samples. However, for streaming, we might not be able to know what N is. Thus, in the data stream, we need to make a decision to keep a sample or not.</p>
+<h3 id="K-1"><a href="#K-1" class="headerlink" title="K = 1"></a>K = 1</h3><p>When k = 1, which means only 1 sample is picked for the whole set of <code>N</code> data items, we will have, the probability of each item be sampled should be <code>1/N</code>.<br>Thus, what we can do is:</p>
+<ul>
+<li>When 1st item n1 arrives, keep it. p(n1) = 1/1 = 1</li>
+<li>When 2nd item n2 arrives, the probability to keep it is <code>1/2</code>, then the probability of taking n1 is: p(n1)= 1 * (1-1/2) = 1/2, and for n2 is p(n2) = 1/2</li>
+<li>When 3rd item n3 arrives, the probability to keep it is <code>1/3</code>, then the probability of taking n1 is: p(n1) = 1 * (1-1/2) * (1-1/3) = 1/3. For n2, it is p(n2) = 1/2 * (1-1/3) = 1/3, for n3 is p(n3) = 1/3</li>
+<li>…</li>
+<li>Thus, for item <code>i</code>, we have p(n1) = p(n2) = .. p(ni-1) = (1/i-1) * (1-1/i) = 1/i, and p(ni) = 1/i</li>
+</ul>
+<h3 id="K-gt-1"><a href="#K-gt-1" class="headerlink" title="K &gt; 1"></a>K &gt; 1</h3><p>When k &gt; 1, which means multiple samples are picked for the whole set of <code>N</code> data items, we will have, the probability of each item be sampled should be <code>k/N</code>.<br>Thus, what we can do is:</p>
+<ul>
+<li>For the first <code>k</code> items, the p(n1) = p(n2) = … = p(nk) = 1</li>
+<li>For <code>k+1</code>th item, the probability to keep it is <code>k/(k+1)</code>, and the probability to keep the item <code>r</code> inside the first <code>k</code> items is:<br>p(nr) = p(item r was kept in last round) * p(item n+1 is not kept) + p(item n+1 is kept) * p(item r was not replaced by n+1)<br>= <code>(1/k+1) + (k/k+1)*(k-1)/k = k/k+1</code></li>
+<li>…</li>
+<li>Thus, for item i (i&gt;k), the probability to keep it is <code>k/i</code></li>
+</ul>
+<h2 id="Flajolet-Martin-FM-counter"><a href="#Flajolet-Martin-FM-counter" class="headerlink" title="Flajolet-Martin(FM) counter"></a>Flajolet-Martin(FM) counter</h2><p>What a FM counter can do? Assume we have 100 billion numbers, how can we find the number of unique numbers out of the 100 billion numbers?</p>
+<blockquote>
+<p>假设n个object，其中有m个唯一的，那么FM算法只需要log(m)的内存占用（实际操作中会是k*log(m)），以及O(n)的运算时间。当然，FM的问题是，它的结果只是一个估计值，不是精确结果。</p>
+</blockquote>
+<h2 id="Bloom-Filter"><a href="#Bloom-Filter" class="headerlink" title="Bloom Filter"></a>Bloom Filter</h2><ul>
+<li>If the result is not found, the element does not exist</li>
+<li>If the result is found, the element <strong>may</strong> exist</li>
+</ul>
+<h2 id="Count-Min-Sketches-CMS"><a href="#Count-Min-Sketches-CMS" class="headerlink" title="Count-Min Sketches (CMS)"></a>Count-Min Sketches (CMS)</h2><blockquote>
+<p>Count-Min Sketch 是数据库中用到的一种 Sketch，所谓 sketch 就是用很少的一点数据来描述全体数据的特性，牺牲了准确性但是代价变得很低。</p>
+</blockquote>
+<blockquote>
+<p>问题：统计一个实时的数据流中元素出现的频率，并且准备随时回答某个元素出现的频率，不需要的精确的计数，那该怎么办？</p>
+</blockquote>
+<h2 id="Storm"><a href="#Storm" class="headerlink" title="Storm"></a>Storm</h2><blockquote>
+<p>Apache Storm是一个分布式的、可靠的、容错的实时数据流处理框架。它与Spark Streaming的最大区别在于它是逐个处理流式数据事件，而Spark Streaming是微批次处理，因此，它比Spark Streaming更实时。</p>
+</blockquote>
+<p>Nimbus：即Storm的Master，负责资源分配和任务调度。一个Storm集群只有一个Nimbus。</p>
+<p>Supervisor：即Storm的Slave，负责接收Nimbus分配的任务，管理所有Worker，一个Supervisor节点中包含多个Worker进程。</p>
+<p>Worker：工作进程，每个工作进程中都有多个Task。</p>
+<p>Task：任务，在 Storm 集群中每个 Spout 和 Bolt 都由若干个任务（tasks）来执行。每个任务都与一个执行线程相对应。</p>
+<p>Topology：计算拓扑，Storm 的拓扑是对实时计算应用逻辑的封装，它的作用与 MapReduce 的任务（Job）很相似，区别在于 MapReduce 的一个 Job 在得到结果之后总会结束，而拓扑会一直在集群中运行，直到你手动去终止它。拓扑还可以理解成由一系列通过数据流（Stream Grouping）相互关联的 Spout 和 Bolt 组成的的拓扑结构。</p>
+<p>Stream：数据流（Streams）是 Storm 中最核心的抽象概念。一个数据流指的是在分布式环境中并行创建、处理的一组元组（tuple）的无界序列。数据流可以由一种能够表述数据流中元组的域（fields）的模式来定义。</p>
+<p>Spout：数据源（Spout）是拓扑中数据流的来源。一般 Spout 会从一个外部的数据源读取元组然后将他们发送到拓扑中。根据需求的不同，Spout 既可以定义为可靠的数据源，也可以定义为不可靠的数据源。一个可靠的 Spout 能够在它发送的元组处理失败时重新发送该元组，以确保所有的元组都能得到正确的处理；相对应的，不可靠的 Spout 就不会在元组发送之后对元组进行任何其他的处理。一个 Spout 可以发送多个数据流。</p>
+<p>Bolt：拓扑中所有的数据处理均是由 Bolt 完成的。通过数据过滤（filtering）、函数处理（functions）、聚合（aggregations）、联结（joins）、数据库交互等功能，Bolt 几乎能够完成任何一种数据处理需求。一个 Bolt 可以实现简单的数据流转换，而更复杂的数据流变换通常需要使用多个 Bolt 并通过多个步骤完成。</p>
+<p>Stream grouping：为拓扑中的每个 Bolt 的确定输入数据流是定义一个拓扑的重要环节。数据流分组定义了在 Bolt 的不同任务（tasks）中划分数据流的方式。在 Storm 中有八种内置的数据流分组方式。</p>
+<p>Reliability：可靠性。Storm 可以通过拓扑来确保每个发送的元组都能得到正确处理。通过跟踪由 Spout 发出的每个元组构成的元组树可以确定元组是否已经完成处理。每个拓扑都有一个“消息延时”参数，如果 Storm 在延时时间内没有检测到元组是否处理完成，就会将该元组标记为处理失败，并会在稍后重新发送该元组。</p>
+<br/>
+<br/>
+
+<h2 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h2><ul>
+<li><a href="https://zhuanlan.zhihu.com/p/29178293" target="_blank" rel="noopener">水塘抽样（Reservoir Sampling）</a></li>
+<li><a href="https://cloud.tencent.com/developer/article/1376934" target="_blank" rel="noopener">什么是水塘抽样算法（Reservoir Sampling）</a></li>
+<li><a href="https://greatpowerlaw.wordpress.com/2012/10/14/flajoletmartin/" target="_blank" rel="noopener">Flajolet-Martin算法</a></li>
+<li><a href="https://blog.csdn.net/baimafujinji/article/details/6472658" target="_blank" rel="noopener">Flajolet-Martin算法</a></li>
+<li><a href="https://florian.github.io/count-min-sketch/" target="_blank" rel="noopener">Count-Min Sketch</a></li>
+<li><a href="https://mp.weixin.qq.com/s?__biz=MjM5ODIzNDQ3Mw==&mid=2649967190&idx=1&sn=67406c916f75c3f2ee59ce05d3f65ea8&chksm=beca3a5089bdb34652a7dbf7b399379f8ccfa3f941c1752dec529b1532018189cb0e4edb12b8&mpshare=1&scene=1&srcid=0622k0SqC0P2ryonJeaM5bVR&pass_ticket=4R9ZWXz%2FDcFGK9tVfysrmusZ3J09OLC1S3R3B%2BhZmqJ6QAiynVx5CyF%2By1Z2dT4Y#rd" target="_blank" rel="noopener">Count-Min Sketch 算法，解决大数据统计难题</a></li>
+</ul>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://shimingwu.github.io/2020/11/12/BigData-8/" data-id="ckhsvnfxa000uzxr1erhp7zbo" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Big-Data/" rel="tag">Big Data</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2020/11/21/Distributed-Database-System-1/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          Distributed Database System (1)
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2020/11/10/BigData-7/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">BigData(7)</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Algorithm/" rel="tag">Algorithm</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Big-Data/" rel="tag">Big Data</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Data-Structure/" rel="tag">Data Structure</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Distributed-Database/" rel="tag">Distributed Database</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/LeetCode/" rel="tag">LeetCode</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/VueJs/" rel="tag">VueJs</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%89%8D%E7%AB%AF/" rel="tag">前端</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%8D%8F%E8%AE%AE/" rel="tag">协议</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%AE%89%E5%85%A8%E6%80%A7/" rel="tag">安全性</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%B7%A5%E5%85%B7/" rel="tag">工具</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%9E%B6%E6%9E%84/" rel="tag">架构</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%AE%97%E6%B3%95/" rel="tag">算法</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/Algorithm/" style="font-size: 12.5px;">Algorithm</a> <a href="/tags/Big-Data/" style="font-size: 20px;">Big Data</a> <a href="/tags/Data-Structure/" style="font-size: 17.5px;">Data Structure</a> <a href="/tags/Distributed-Database/" style="font-size: 17.5px;">Distributed Database</a> <a href="/tags/LeetCode/" style="font-size: 12.5px;">LeetCode</a> <a href="/tags/VueJs/" style="font-size: 10px;">VueJs</a> <a href="/tags/%E5%89%8D%E7%AB%AF/" style="font-size: 15px;">前端</a> <a href="/tags/%E5%8D%8F%E8%AE%AE/" style="font-size: 10px;">协议</a> <a href="/tags/%E5%AE%89%E5%85%A8%E6%80%A7/" style="font-size: 12.5px;">安全性</a> <a href="/tags/%E5%B7%A5%E5%85%B7/" style="font-size: 10px;">工具</a> <a href="/tags/%E6%9E%B6%E6%9E%84/" style="font-size: 10px;">架构</a> <a href="/tags/%E7%AE%97%E6%B3%95/" style="font-size: 12.5px;">算法</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/11/">November 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/09/">September 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/07/">July 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/09/">September 2018</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2020/11/22/Distributed-Database-System-5/">Distributed Database System (5)</a>
+          </li>
+        
+          <li>
+            <a href="/2020/11/22/Distributed-Database-System-4/">Distributed Database System (4)</a>
+          </li>
+        
+          <li>
+            <a href="/2020/11/21/Distributed-Database-System-3/">Distributed Database System (3)</a>
+          </li>
+        
+          <li>
+            <a href="/2020/11/21/Distributed-Database-System-2/">Distributed Database System (2)</a>
+          </li>
+        
+          <li>
+            <a href="/2020/11/21/Distributed-Database-System-1/">Distributed Database System (1)</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2020 Shiming Wu<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+
+  
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+  </div>
+</body>
+</html>
