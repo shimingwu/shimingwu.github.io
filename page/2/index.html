@@ -66,6 +66,390 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-BigData-7" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/11/10/BigData-7/" class="article-date">
+  <time datetime="2020-11-10T21:30:24.000Z" itemprop="datePublished">2020-11-10</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/11/10/BigData-7/">BigData(7)</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>This is revision note for NUS master study of CS5425 Big Data Systems for Data Science.</p>
+<h2 id="Link-Analysis-Algorithms"><a href="#Link-Analysis-Algorithms" class="headerlink" title="Link Analysis Algorithms"></a>Link Analysis Algorithms</h2><p>There are three algorithms involved to compute the <strong>importance</strong> of nodes in the graph.</p>
+<ul>
+<li><code>Page Rank</code></li>
+<li><code>Topic-Specific (Personalized) Page Rank</code></li>
+<li><code>Web Spam Detection Algorithms</code></li>
+</ul>
+<h2 id="Page-Rank"><a href="#Page-Rank" class="headerlink" title="Page Rank"></a>Page Rank</h2><p>In page rank, the higher the score, the more important a node is. There is one important property of this algorithm, <strong>a page is important if it is pointed by other important pages.</strong></p>
+<img src="/2020/11/10/BigData-7/flow_equation.png" class="" title="flow_equation">
+
+<p>A flow equation is used to describe the rank.</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">For node a, we can see that there are 2 outgoing links, each of the link will have a&#x2F;2.</span><br><span class="line">Similarly, node y has two outgoings, so each link is y&#x2F;2.</span><br><span class="line">For node m, only one outgoing, thus, link has m.</span><br><span class="line"></span><br><span class="line">To get the rank of y, sum up all incoming links:</span><br><span class="line">y&#x2F;2 + a&#x2F;2</span><br><span class="line"></span><br><span class="line">To get the rank of a, sum up all incoming links:</span><br><span class="line">y&#x2F;2 + m</span><br><span class="line"></span><br><span class="line">To get the rank of m, sum up all incoming links:</span><br><span class="line">a&#x2F;2</span><br></pre></td></tr></table></figure>
+<p>Thus, the flow equation is:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">ry &#x3D; ry&#x2F;2 + ra&#x2F;2</span><br><span class="line">ra &#x3D; ry&#x2F;2 + rm</span><br><span class="line">rm &#x3D; ra&#x2F;2</span><br></pre></td></tr></table></figure>
+<p>As there are three unknowns, three equations without constants, we add one more constraint to force the uniqueness:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ry + ra + rm &#x3D; 1</span><br></pre></td></tr></table></figure>
+<p>With this, we are able to calculate the page rank. However, the calculation will be very heavy when there is a large number of nodes.</p>
+<h2 id="Power-iteration"><a href="#Power-iteration" class="headerlink" title="Power iteration"></a>Power iteration</h2><p>There are two parts involved in <code>power iteration</code>:</p>
+<ul>
+<li><code>Stochastic adjacency matrix M</code></li>
+<li><code>Eigenvector</code></li>
+</ul>
+<p>From above, we can build a stochastic adjacency matrix M:</p>
+
+
+<p>Apply the power iteration:</p>
+
+
+<h2 id="Random-Teleports"><a href="#Random-Teleports" class="headerlink" title="Random Teleports"></a>Random Teleports</h2><ol>
+<li><p><strong>Dead Ends</strong>. The result might not converge:<br>Node <code>A</code> points to Node <code>B</code> and Node B points to Node <code>A</code>, <code>A</code> &lt;—&gt; <code>B</code></p>
+</li>
+<li><p><strong>Spider traps</strong>. Importance information leaks out:<br>Node <code>A</code> points to Node <code>B</code>, <code>A</code> —&gt; <code>B</code></p>
+</li>
+</ol>
+<p>To solve these, <code>Teleports</code> is introduced by Google. The solution is that in each ‘flow’, it has certain opportunity to jump to other nodes (not the linked one).</p>
+<img src="/2020/11/10/BigData-7/illustration_random_teleport.png" class="" title="illustration_random_teleport">
+<img src="/2020/11/10/BigData-7/illustration_random_teleport_calculation.png" class="" title="illustration_random_teleport_calculation">
+
+<h2 id="Topic-Specific-PageRank"><a href="#Topic-Specific-PageRank" class="headerlink" title="Topic-Specific PageRank"></a>Topic-Specific PageRank</h2><p>The evaluation is not just conducted for the popularity but on the topic as well. To achieve this, the probability assigned for teleport is not consistent for all nodes. Instead, <strong>when a walker teleports, only a page in a set S which only includes pages are relevant to the topic will be picked.</strong></p>
+<h2 id="SimRank"><a href="#SimRank" class="headerlink" title="SimRank"></a>SimRank</h2><blockquote>
+<p>Effectively, SimRank is a measure that says “two objects are considered to be similar if they are referenced by similar objects.”</p>
+</blockquote>
+<h2 id="TrustRank"><a href="#TrustRank" class="headerlink" title="TrustRank"></a>TrustRank</h2><ul>
+<li><code>Link Farms</code>: <code>Inaccessible pages</code>, <code>Accessible pages</code> and <code>Owned pages</code></li>
+</ul>
+<h2 id="HITS"><a href="#HITS" class="headerlink" title="HITS"></a>HITS</h2><ul>
+<li><code>Hubs</code> and <code>Authorities</code></li>
+</ul>
+<p><strong>Hubs</strong><br>Quality as an expert. Total sum of votes for authorities pointed to.</p>
+<p><strong>Authority</strong><br>Quality as a content. Total sum of votes coming from experts.</p>
+<blockquote>
+<p>Authorities are pages containing useful information like Newspaper home pages, Course home pages and Home pages of auto manufacturers</p>
+</blockquote>
+<blockquote>
+<p>Hubs are pages that link to authorities like List of newspapers, Course bulletin and List of US auto manufacturers</p>
+</blockquote>
+<img src="/2020/11/10/BigData-7/HITS_flow.png" class="" title="HITS_flow">
+
+
+
+<h2 id="Difference-between-PageRank-and-HITS"><a href="#Difference-between-PageRank-and-HITS" class="headerlink" title="Difference between PageRank and HITS"></a>Difference between PageRank and HITS</h2><ul>
+<li>In the PageRank model, the value of the link depends on the <strong>links into u</strong></li>
+<li>In the HITS model, it depends on the value of the other <strong>links out of u</strong></li>
+</ul>
+<h2 id="Pregel"><a href="#Pregel" class="headerlink" title="Pregel"></a>Pregel</h2><p>Pregel is serving as a computational model. There are four basic elements in Pregel model:</p>
+<ul>
+<li><code>Vertex</code>: In Pregel, each node(vertex) has an unique ID</li>
+<li><code>Edge</code>: In Pregel, each edge can be assigned with a property</li>
+<li><code>Message</code>: Message is the core design in Pregel. Message is used to indicate the status of a vertex.</li>
+<li><code>Superstep</code>: One superstep is an iteration of computation happens in the Pregel.</li>
+</ul>
+<p>In Pregel, for each vertex at each superstep, it will receive a set of messages from previous superstep. The vertex will process all the messages then emit these messages to other vertex.</p>
+<br/>
+<br/>
+
+<h2 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h2><ul>
+<li><a href="https://cloud.tencent.com/developer/news/148367" target="_blank" rel="noopener">Pregel总结</a></li>
+<li><a href="https://io-meter.com/2018/03/23/pregel-in-graphs/" target="_blank" rel="noopener">图解图算法 Pregel: 模型简介与实战案例</a></li>
+<li><a href="https://cshihong.github.io/2018/05/30/Pregel%EF%BC%88%E5%9B%BE%E8%AE%A1%E7%AE%97%EF%BC%89%E6%8A%80%E6%9C%AF%E5%8E%9F%E7%90%86/" target="_blank" rel="noopener">Pregel（图计算）技术原理</a></li>
+</ul>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://shimingwu.github.io/2020/11/10/BigData-7/" data-id="cki7gopey000tzprv3twwh6x9" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Big-Data/" rel="tag">Big Data</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-BigData-4" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/11/10/BigData-4/" class="article-date">
+  <time datetime="2020-11-10T13:26:40.000Z" itemprop="datePublished">2020-11-10</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/11/10/BigData-4/">BigData(4)</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>This is revision note for NUS master study of CS5425 Big Data Systems for Data Science.</p>
+<h2 id="Locality-Sensitive-Hashing"><a href="#Locality-Sensitive-Hashing" class="headerlink" title="Locality Sensitive Hashing"></a>Locality Sensitive Hashing</h2><ul>
+<li><code>Jaccard distance/similarity</code></li>
+<li><code>Shingling</code></li>
+<li><code>Min-hashing</code></li>
+<li><code>Locality Sensitive Hashing(LSH)</code></li>
+</ul>
+<p><strong>Jaccard Distance/Similarity</strong></p>
+<p>We use Jaccard similarity to define the “distance” betweem two elements.</p>
+<p>If we have two <strong>sets</strong>, [1,2,3,4,5,6] and [3,4,6,9,10], there are 3 elements are in intersection: [3,4,6] and there are 8 elements in the union: [1,2,3,4,5,6,9,10], thus, we have:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Jaccard similarity &#x3D; 3&#x2F;8</span><br><span class="line">Jaccard distance &#x3D; 1 - Jaccard similarity &#x3D; 1 - 3&#x2F;8 &#x3D; 5&#x2F;8</span><br></pre></td></tr></table></figure>
+
+<p><strong>Shingling</strong></p>
+<p>Shingling is to convert document into sets.</p>
+<blockquote>
+<p>A k-shingle (or k-gram) for a document is a sequence of k tokens that appears in the doc.</p>
+</blockquote>
+<p><strong>The order does matter here and the token can be a character or word or even a feature.</strong> </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">Example 1:</span><br><span class="line">&#123;Hello world&#125;</span><br><span class="line">k &#x3D; 3 characters, we will have &#123;Hel, ell, llo, lo_, o_w, _wo, wor, rld&#125;</span><br><span class="line">k &#x3D; 1 word, we will have &#123;Hello, world&#125;</span><br><span class="line"></span><br><span class="line">Example 2:</span><br><span class="line">&#123;abcab&#125;</span><br><span class="line">k &#x3D; 2, we will have &#123;ab, bc, ca, ab&#125; &#x3D;&gt; remove duplicates &#x3D;&gt; &#123;ab, bc, ca&#125;</span><br><span class="line">Thus, the final result is &#123;ab, bc, ca&#125;</span><br></pre></td></tr></table></figure>
+
+<p>Examples on how the to find the similarity between documents.</p>
+
+
+
+<p>From the diagram, we can see</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">intersection &#x3D; 3</span><br><span class="line">union &#x3D; 6</span><br><span class="line">Jaccard similarity &#x3D; 3&#x2F;6</span><br><span class="line">Jaccard distance &#x3D; 1 - 3&#x2F;6 &#x3D; 3&#x2F;6</span><br></pre></td></tr></table></figure>
+
+<p>However, using this method, the computation will be very heavy. </p>
+<p><strong>Min-hashing</strong></p>
+<p>When a document is very big, it result in a huge amount of shingles. Thus, hashing can be used to compress shingles. </p>
+<blockquote>
+<p>Minshaing converts large sets to short signatures, while preserving similarity</p>
+</blockquote>
+<p><strong>Note: min-hashing is specifically for Jaccard similarity</strong></p>
+<p>The sample of how min-hashing works is shown below.</p>
+
+
+<p>The signature matrix taken from the example is the [1,2,2,1]</p>
+<p>After calculate multiple rounds of permutations independently, as shown below.</p>
+
+
+<p>There are 3 signature matrix:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">2,1,2,1</span><br><span class="line">2,1,4,1</span><br><span class="line">1,2,1,2</span><br></pre></td></tr></table></figure>
+
+<p>The similarity calculation is</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">Column 1 &amp; Column 3:</span><br><span class="line">Column 1 has (1,2)</span><br><span class="line">Column 3 has (1,2,4)</span><br><span class="line">Union: 3 as (1,2,4)</span><br><span class="line">Intersection: 2 as (1,2)</span><br><span class="line">Similarity &#x3D; 2&#x2F;3</span><br><span class="line">Distance &#x3D; 1 - 2&#x2F;3 &#x3D; 1&#x2F;3</span><br><span class="line">(2,4) are the only 1 different. So similarity &#x3D; 1 &#x2F; 3 &#x3D; 0.67</span><br></pre></td></tr></table></figure>
+
+<p><strong>Locality Sensitive Hashing(LSH)</strong></p>
+<p>Find a documents with Jaccard similarity at least s.</p>
+<h2 id="Clustering"><a href="#Clustering" class="headerlink" title="Clustering"></a>Clustering</h2>
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://shimingwu.github.io/2020/11/10/BigData-4/" data-id="cki7gopeu000ozprv7ck008c0" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Big-Data/" rel="tag">Big Data</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-BigData-6" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/11/10/BigData-6/" class="article-date">
+  <time datetime="2020-11-10T13:24:56.000Z" itemprop="datePublished">2020-11-10</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/11/10/BigData-6/">BigData(6)</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>This is revision note for NUS master study of CS5425 Big Data Systems for Data Science.</p>
+<h2 id="Spark"><a href="#Spark" class="headerlink" title="Spark"></a>Spark</h2><p>Spark generalizes the MapReduce to provide the following features:</p>
+<ul>
+<li><code>High performance</code></li>
+<li><code>Better programmability</code></li>
+<li><code>A unified engine</code></li>
+</ul>
+<h2 id="RDD-Resilient-Distributed-Datasets"><a href="#RDD-Resilient-Distributed-Datasets" class="headerlink" title="RDD (Resilient Distributed Datasets)"></a>RDD (Resilient Distributed Datasets)</h2><p>RDD is the core abstraction. </p>
+<blockquote>
+<p>Collections of objects spread across a cluster, stored in RAM or on Disk. Built through parallel transformations and automatically rebuilt on failure</p>
+</blockquote>
+<p>There are two types of RDD:</p>
+<ul>
+<li><code>Parallelized collections</code>: take an existing single-node collection and parallel it</li>
+<li><code>Hadoop datasets</code>: files on HDFS or other compatible storage</li>
+</ul>
+<p>The operations on RDDs are not computed immediately. Instead, only certain actions will trigger the computation, for example, <code>count</code>, <code>saveAsTextFile</code>.</p>
+<p>RDDs track lineage information to reconstruct lost partitions.</p>
+<h2 id="DataFrame"><a href="#DataFrame" class="headerlink" title="DataFrame"></a>DataFrame</h2><p>Spark SQL is a Spark module for structured data processing. There are several ways to interact with Spark SQL including SQL and the Dataset API and with the extra information to perform extra optimizations, and a DataFrame is a Dataset organized into named columns. The image below shows the general idea.</p>
+<img src="/2020/11/10/BigData-6/SparkSQL.png" class="" title="SparkSQL">
+
+<p>DataFrames hold a row with schema information and provides a relational operations regarding the schema.</p>
+<h2 id="Directions-for-Spark"><a href="#Directions-for-Spark" class="headerlink" title="Directions for Spark"></a>Directions for Spark</h2><ul>
+<li><code>Multi-core scalability</code></li>
+<li><code>Continuous (streaming) applications</code></li>
+</ul>
+<h2 id="Challenges-faced-for-numerical-computation-over-big-data"><a href="#Challenges-faced-for-numerical-computation-over-big-data" class="headerlink" title="Challenges faced for numerical computation over big data"></a>Challenges faced for numerical computation over big data</h2><ul>
+<li><code>Correctness</code></li>
+<li><code>Performance</code>: Cache RDDs to avoid I/O and avoid unnecessary computation</li>
+<li><code>Trade-off between accuracy and performance</code></li>
+</ul>
+<h2 id="Spark-libraries"><a href="#Spark-libraries" class="headerlink" title="Spark libraries"></a>Spark libraries</h2><p>There are many libraries in Spark to support common algorithms, like GraphX, MLlib, etc.</p>
+<ul>
+<li><code>GraphX</code>: A general graph processing library. It builds the graph using RDDs of nodes and edges.</li>
+<li><code>Spark streaming</code>: It will split the live stream into different chunks and each chunk of data will be treated as RDDs and the processed results will be returned in batches.</li>
+<li><code>Spark SQL</code>: Enables to save and query the structured data in Spark.<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  &quot;text&quot;: &quot;Example&quot;,</span><br><span class="line">  &quot;user&quot;: &#123;</span><br><span class="line">    &quot;name&quot;: &quot;Mike&quot;,</span><br><span class="line">    &quot;id:1</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">To query from Json, we can have:</span><br><span class="line">c.sql(&quot;select user.name from tweets&quot;)</span><br></pre></td></tr></table></figure></li>
+<li><code>MLlib</code>: Support different machine learning algorithms</li>
+</ul>
+<br/>
+<br/>
+
+<h2 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h2><ul>
+<li><a href="https://spark-reference-doc-cn.readthedocs.io/zh_CN/latest/programming-guide/sql-guide.html" target="_blank" rel="noopener">Spark SQL, DataFrame 和 Dataset 编程指南</a></li>
+<li><a href="https://spark.apache.org/docs/latest/sql-programming-guide.html" target="_blank" rel="noopener">Spark SQL, DataFrames and Datasets Guide</a></li>
+<li><a href="https://blog.csdn.net/zg_hover/article/details/73159212" target="_blank" rel="noopener">spark2.0原理分析–RDD血缘（RDD Lineage）</a></li>
+</ul>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://shimingwu.github.io/2020/11/10/BigData-6/" data-id="cki7gopex000rzprva25bhsi4" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Big-Data/" rel="tag">Big Data</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-BigData-5" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/11/09/BigData-5/" class="article-date">
+  <time datetime="2020-11-09T20:35:18.000Z" itemprop="datePublished">2020-11-09</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/11/09/BigData-5/">BigData(5)</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>This is revision note for NUS master study of CS5425 Big Data Systems for Data Science.</p>
+<h2 id="Hadoop-VS-Databases"><a href="#Hadoop-VS-Databases" class="headerlink" title="Hadoop VS Databases"></a>Hadoop VS Databases</h2><blockquote>
+<p>Apache Hadoop is not a database storage or relational storage, its main competency is to process data in a distributed fashion. It does have a storage component called HDFS (Hadoop Distributed File System) which stoes files used for processing but HDFS does not qualify as a relational database, it is just a storage model.</p>
+</blockquote>
+<blockquote>
+<p>There are components like Hive which can work on top of HDFS and which allows users to query the HDFS storage using SQL like queries using HiveQL but that is just SQL like queries and does not make HDFS or Apcahe Hadoop a database or relational database.</p>
+</blockquote>
+<p>Thus, Hadoop is not a database even though it has a storage system HDFS. But can Hadoop replace the existing database? The answer is uncertain.</p>
+<p>Firstly, schema is supported by relational database. Schema has its own advantages like it defines the contract of data format and it decouples the logical from physical. Moreover, with schema, there is no need to parse the data to get related fields. </p>
+<p>Secondly, column stores are good. Compared to the row stores, a column store has advantages like:</p>
+<ul>
+<li><code>Read efficiency</code>: Usually only few columns will be selected for a query</li>
+<li><code>Better compression</code>: Data under same column will have the same data type.</li>
+<li><code>Vectorized processing</code><blockquote>
+<p>SIMD(Single Instruction Multiple Data)即单指令流多数据流，是一种采用一个控制器来控制多个处理器，同时对一组数据（又称“数据向量”）中的每一个分别执行相同的操作从而实现空间上的并行性的技术。简单来说就是一个指令能够同时处理多个数据。</p>
+</blockquote>
+</li>
+<li><code>Opportunities to operate directly on compressed data</code></li>
+</ul>
+<h2 id="HadoopDB"><a href="#HadoopDB" class="headerlink" title="HadoopDB"></a>HadoopDB</h2><p>HadoopDB is an idea where co-locate a RDBMS on every slave node.</p>
+<h2 id="Hive"><a href="#Hive" class="headerlink" title="Hive"></a>Hive</h2><ul>
+<li><code>Thrift</code>: To support schema on Hadoop</li>
+<li><code>HDFS Block</code>: In each HDFS block, RCFile organizes the records with the basic unit of a row group. </li>
+<li><code>User Defined Functions (UDF)</code>: Provide index</li>
+</ul>
+<h2 id="YARN-Yet-Another-Resource-Negotiator"><a href="#YARN-Yet-Another-Resource-Negotiator" class="headerlink" title="YARN - Yet Another Resource Negotiator"></a>YARN - Yet Another Resource Negotiator</h2><p>Yarn provides resource management and a central platform to deliver consistent operations, security and data governance tools across Hadoop clusters.</p>
+<blockquote>
+<p>By separating resource management functions from the programming model, YARN delegates many scheduling-related functions to per-job components.</p>
+</blockquote>
+<h2 id="Dryad-Graph-Operators"><a href="#Dryad-Graph-Operators" class="headerlink" title="Dryad - Graph Operators"></a>Dryad - Graph Operators</h2><p>Dryad is a general-purpose distributed execution engine for coarse-grain data-parallel applications. </p>
+<h2 id="Spark"><a href="#Spark" class="headerlink" title="Spark"></a>Spark</h2><p>There are two problems with MapReduce:</p>
+<ul>
+<li>Programming language is Java</li>
+<li>Each MapReduce job will be written into disk, the shuffle is a bottleneck</li>
+</ul>
+<p>Spark is a solution that extends the MapReduce.</p>
+<h2 id="Presto"><a href="#Presto" class="headerlink" title="Presto"></a>Presto</h2><p>There are three roles in the Presto query execution:</p>
+<ul>
+<li><code>Coordinator</code>: analyze and schedule</li>
+<li><code>Discovery</code>: heartbeat and role managements</li>
+<li><code>Worker</code>: execute</li>
+</ul>
+<p>The query sent by the presto-cli is a HTTP POST request, and it will be sent to the coordinator. In side the coordinator, the query will be parsed to an Abstract Syntax Tree (AST), then analyzer will convert it to the logical query plan &amp; distributed query plan, the optimizer will make it as optimized query plan, and sent to execution planner.</p>
+<blockquote>
+<p>抽象语法树树，描述的最原始的用户需求。抽象语法树描述的信息，执行效率上不是最优，执行操作也过于复杂。需要把抽象语法树转化成执行计划。执行计划分成两类，一类是逻辑执行计划，一类是物理执行计划。逻辑执行计划，以树状结构来描述执行，每个节点是最简单的操作。物理执行计划，根据逻辑执行计划生成字节码，交由驱动执行。</p>
+</blockquote>
+<br/>
+<br/>
+
+<h2 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h2><ul>
+<li><a href="https://examples.javacodegeeks.com/enterprise-java/apache-hadoop/is-hadoop-a-database/" target="_blank" rel="noopener">Is Hadoop a database</a></li>
+<li><a href="https://zhuanlan.zhihu.com/p/55108455" target="_blank" rel="noopener">深入浅出Hadoop YARN</a></li>
+<li><a href="https://chu888chu888.gitbooks.io/hadoopstudy/content/Content/8/chapter8.html" target="_blank" rel="noopener">第八章 Hive的安装与数据导入导出</a></li>
+<li><a href="https://chu888chu888.gitbooks.io/hadoopstudy/content/Content/3/chapter0301.html" target="_blank" rel="noopener">Hadoop的一些基本概念</a></li>
+<li><a href="https://tech.meituan.com/2014/06/16/presto.html" target="_blank" rel="noopener">Presto实现原理和美团的使用实践</a></li>
+<li><a href="https://blog.csdn.net/sjtuyunlei/article/details/79382979" target="_blank" rel="noopener">深入理解Presto(2) ：Presto查询执行过程</a></li>
+</ul>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://shimingwu.github.io/2020/11/09/BigData-5/" data-id="cki7gopew000pzprv103g4e8s" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Big-Data/" rel="tag">Big Data</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
     <article id="post-BigData-3" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
     <a href="/2020/11/09/BigData-3/" class="article-date">
@@ -534,7 +918,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://shimingwu.github.io/2020/11/09/BigData-3/" data-id="ckhsvnfx4000jzxr11d6v7qmg" class="article-share-link">Share</a>
+      <a data-url="https://shimingwu.github.io/2020/11/09/BigData-3/" data-id="cki7gopet000lzprvdn1h4jld" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Big-Data/" rel="tag">Big Data</a></li></ul>
@@ -637,7 +1021,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://shimingwu.github.io/2020/11/08/BigData-2/" data-id="ckhsvnfx2000hzxr1dv6a9ktt" class="article-share-link">Share</a>
+      <a data-url="https://shimingwu.github.io/2020/11/08/BigData-2/" data-id="cki7goper000jzprv982v8plo" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Big-Data/" rel="tag">Big Data</a></li></ul>
@@ -702,7 +1086,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://shimingwu.github.io/2020/11/08/BigData-1/" data-id="ckhsvnfx1000gzxr15uoc9rgb" class="article-share-link">Share</a>
+      <a data-url="https://shimingwu.github.io/2020/11/08/BigData-1/" data-id="cki7gopeq000hzprvhclfe6gt" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Big-Data/" rel="tag">Big Data</a></li></ul>
@@ -749,7 +1133,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://shimingwu.github.io/2020/09/26/LeetCode-Largest-Number/" data-id="ckhsvnfxi0017zxr19gey9z8m" class="article-share-link">Share</a>
+      <a data-url="https://shimingwu.github.io/2020/09/26/LeetCode-Largest-Number/" data-id="cki7gopfd001jzprv3viibotz" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Algorithm/" rel="tag">Algorithm</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/LeetCode/" rel="tag">LeetCode</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E7%AE%97%E6%B3%95/" rel="tag">算法</a></li></ul>
@@ -798,7 +1182,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://shimingwu.github.io/2020/09/22/LeetCode-Majority-Element-II/" data-id="ckhsvnfxj0019zxr13j2m5s9d" class="article-share-link">Share</a>
+      <a data-url="https://shimingwu.github.io/2020/09/22/LeetCode-Majority-Element-II/" data-id="cki7gopfe001mzprv1q0260qz" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Algorithm/" rel="tag">Algorithm</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/LeetCode/" rel="tag">LeetCode</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E7%AE%97%E6%B3%95/" rel="tag">算法</a></li></ul>
@@ -948,451 +1332,10 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://shimingwu.github.io/2020/07/21/%E5%85%B3%E4%BA%8EWebpack/" data-id="ckhsvnfy6002jzxr1dl9e4szs" class="article-share-link">Share</a>
+      <a data-url="https://shimingwu.github.io/2020/07/21/%E5%85%B3%E4%BA%8EWebpack/" data-id="cki7gopg40030zprveemm0cox" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E5%89%8D%E7%AB%AF/" rel="tag">前端</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E5%B7%A5%E5%85%B7/" rel="tag">工具</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-关于Serverless的二三事-BFF" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2020/07/20/%E5%85%B3%E4%BA%8EServerless%E7%9A%84%E4%BA%8C%E4%B8%89%E4%BA%8B-BFF/" class="article-date">
-  <time datetime="2020-07-20T14:15:32.000Z" itemprop="datePublished">2020-07-20</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2020/07/20/%E5%85%B3%E4%BA%8EServerless%E7%9A%84%E4%BA%8C%E4%B8%89%E4%BA%8B-BFF/">关于Serverless的二三事</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <br/>
-<br/>
-
-<p>因为被丢去写前端了嘛，必须使用一个公司内部的框架。研究了一阵子后发现有一个serverless的概念属于以前听说过，大致明白含义但是从来没有好好了解。决定开一个系列看看能不能讲明白。<br>在开始讲serverless之前，先谈一谈什么是Backend-for-Frontend(BFF)。</p>
-<h2 id="1-什么是Backend-for-Frontend（BFF"><a href="#1-什么是Backend-for-Frontend（BFF" class="headerlink" title="1. 什么是Backend-for-Frontend（BFF)"></a>1. 什么是Backend-for-Frontend（BFF)</h2><p>在现有的结构里面，大部分的设计都是前端直接和后端API进行通信。在这种模式下，如果前端需要一些改动或者增加新的feature，就需要后端团队进行配合，至少得把API的接口设计好才可以继续进行开发。那么弊端就会出现了：</p>
-<ul>
-<li>资源调度问题：没有足够的人手进行后端开发</li>
-<li>需求问题：该API也许是用于多平台多应用的开发，即别的平台/应用可能没有改动这个API的需求。不同的应用有不同的需求，该API可能无法满足所有的需求。从而需要进行“general”化。</li>
-<li>管理问题：前端和后端团队的任务优先级不同等等<br>这些因素都可以导致开发周期延长，维护成本增加以及其他问题，于是就有了BFF，自如其名，即，专门为了前端而存在的“后端”或者说一个“中间件”。</li>
-</ul>
-<h3 id="传统意义上的前后端架构："><a href="#传统意义上的前后端架构：" class="headerlink" title="传统意义上的前后端架构："></a>传统意义上的前后端架构：</h3><img src="/2020/07/20/%E5%85%B3%E4%BA%8EServerless%E7%9A%84%E4%BA%8C%E4%B8%89%E4%BA%8B-BFF/backend-frontend.png" class="" title="backend-frontend">
-
-<h3 id="BFF架构："><a href="#BFF架构：" class="headerlink" title="BFF架构："></a>BFF架构：</h3><img src="/2020/07/20/%E5%85%B3%E4%BA%8EServerless%E7%9A%84%E4%BA%8C%E4%B8%89%E4%BA%8B-BFF/backend-for-frontend-example.png" class="" title="backend-for-frontend-example">
-
-<br/>
-
-<p>可以很明显的看出，BFF pattern把一个很复杂的大型后端分解成了多个BFF。BFF设计模式旨在为所有API保留一个接口，并充当前端和API之间的转换层。它大部分时候是用来作为一个“转接器”，它会汇总所有downstream services的数据，并根据当前的前端设计进行数据转换。BFF本身并不实现业务应用逻辑，它仅仅是转换（transformation）和聚合（aggregation）。由于BFF是面向用户体验的，往往是由实现该部分UI的前端团队负责实现以及维护，即UI与BFF由同一个团队负责。前端团队往往更理解哪些数据是必要的，所以可以更好的理解需求以及实现数据转换。</p>
-<p>一言以蔽之，BFF是一个解除后端API和前端UI耦合的设计。Decouple the backend API and frontend UI.</p>
-<br/>
-<br/>
-
-<h2 id="2-BFF的架构"><a href="#2-BFF的架构" class="headerlink" title="2. BFF的架构"></a>2. BFF的架构</h2><p>在BFF里面，有三个主体：</p>
-<ul>
-<li>Backend： 后端。负责数据模型（data model），数据库交互等等。</li>
-<li>BFF: 与后端交流，根据UI来定义或者调整API，简化Client Side（客户端）和Server Side（服务端）的发布流程，且负责提供一个API集合给对应的前端。</li>
-<li>Frontend： 前端。负责UI。</li>
-</ul>
-<p>目前主要有两种架构BFF的方式：</p>
-<ol>
-<li>每一个前端团队都有自己的BFF。</li>
-<li>所有的前端团队一起分享同一个BFF。</li>
-</ol>
-<h3 id="每一个前端团队都有自己的BFF"><a href="#每一个前端团队都有自己的BFF" class="headerlink" title="每一个前端团队都有自己的BFF"></a>每一个前端团队都有自己的BFF</h3><p>这种架构方式细化了每一个平台的需求。后端可以放心地提供信息，BFF部分则负责优化，转换。</p>
-<img src="/2020/07/20/%E5%85%B3%E4%BA%8EServerless%E7%9A%84%E4%BA%8C%E4%B8%89%E4%BA%8B-BFF/backend_frontend_oneBFF.png" class="" title="backend frontend one BFF">
-
-<h3 id="多个前端团队拥有同一个BFF"><a href="#多个前端团队拥有同一个BFF" class="headerlink" title="多个前端团队拥有同一个BFF"></a>多个前端团队拥有同一个BFF</h3><p>这种架构方式可以提高开发效率，因为所有的前端API需求都被放在一起集中开发。其实这种情况下，BFF就是一个API Gateway，它负责了对其他downstream service的对接。</p>
-<img src="/2020/07/20/%E5%85%B3%E4%BA%8EServerless%E7%9A%84%E4%BA%8C%E4%B8%89%E4%BA%8B-BFF/backend-for-frontend-example.png" class="" title="backend-for-frontend-example">
-
-<br/>
-<br/>
-
-<h2 id="3-BFF的具体实现与问题"><a href="#3-BFF的具体实现与问题" class="headerlink" title="3. BFF的具体实现与问题"></a>3. BFF的具体实现与问题</h2><p>关于BFF的实现，有三个问题要考虑：</p>
-<ul>
-<li>拆分程度</li>
-<li>技术栈管理</li>
-<li>复用问题</li>
-</ul>
-<h3 id="拆分程度"><a href="#拆分程度" class="headerlink" title="拆分程度"></a>拆分程度</h3><p>上面以及聊过两种不同的架构，那么在实现上，又有什么考虑呢？首先是拆分程度。既然我们要将一个大后端拆分成多个BFF，那么要根据什么来拆分呢：</p>
-<ul>
-<li>UX/UI：根据用户的交互体验。比如PC端的体验和移动端的体验不同，可以考虑拆分出2个BFF。</li>
-<li>端级：根据不同的设备来进行拆分。比如iOS与Android同属于移动端，但是他们隶属于不同的前端设备，我们也可以根据这个来拆分。</li>
-<li>团队：根据不同的团队来拆分。即每一个前端团队都拥有一个自己的BFF。</li>
-</ul>
-<p>通常情况下，我们会选择UX/UI来拆分。团队拆分很大程度上等同于UX/UI（但是还是看每个公司的组织结构），而端级的拆分很可能导致大量的代码重复，因为接口总是相同的。</p>
-<h3 id="技术栈问题"><a href="#技术栈问题" class="headerlink" title="技术栈问题"></a>技术栈问题</h3><p>Mircoservice已然是行业的一个趋势，但是依赖问题始终令人头疼。在同一个生态下面的不同服务往往都有自己的通信和工作方式，常常需要依赖专门设计的接口进行通信。这种情况下，我们往往需要考虑：</p>
-<ul>
-<li>即如何对接不同的downstream service：对于不同的接口，我们是应该使用RPC协议，Rest还是GraphQL？</li>
-<li>如何管理组合这些API：该如何合理进行异步的调用，如何引用事件机制（比如RX）将这些异步的控制流程进行简化？</li>
-<li>当某一个API调用失败时，该如何应对：是否应该在BFF层引入容错？如何设计熔断、重试机制才能合理的保护整个系统？是否需要提供不完整的响应内容？</li>
-<li>等等……</li>
-</ul>
-<h3 id="复用问题"><a href="#复用问题" class="headerlink" title="复用问题"></a>复用问题</h3><p>进行拆分就意味着重复逻辑的出现。一些通用逻辑比如：authentication，rate limit（限流）等等会导致大量的重复代码，并且重复代码就意味着我们难以保证统一更新以及使用起来有更高的学习曲线。由于我们是为了灵活性才拆分出多个BFF，这种情况下我们不可能再次将这些BFF合并。于是就需要多一个中间层进行通用逻辑的拆分：</p>
-<ul>
-<li>公共库</li>
-<li>独立服务</li>
-<li>downstream service（下游服务，依赖树中的一环）<br>问题又来了……抽取重复部分就会导致耦合……不管是什么解决方案，前提是<b>技术栈相同</b>以及<b>该冗余是不可以忍受的</b>。</li>
-</ul>
-<p>比较好的一个方案是直接使用网关，使用网关来进行一些基础功能比如routing，authentication&amp;authorization，monitor，rate limiting等等……</p>
-<br/>
-<br/>
-
-<h2 id="4-业界实践"><a href="#4-业界实践" class="headerlink" title="4. 业界实践"></a>4. 业界实践</h2><img src="/2020/07/20/%E5%85%B3%E4%BA%8EServerless%E7%9A%84%E4%BA%8C%E4%B8%89%E4%BA%8B-BFF/BFF-implementation.png" class="">
-
-<br/>
-<br/>
-
-<h2 id="5-参考资料"><a href="#5-参考资料" class="headerlink" title="5. 参考资料"></a>5. 参考资料</h2><ol>
-<li><a href="https://www.cnblogs.com/alimayun/p/12063401.html" target="_blank" rel="noopener">微服务架构~BFF和网关是如何演化出来的</a> </li>
-<li><a href="https://medium.com/blue-harvest-tech-blog/why-big-companies-and-rapidly-growing-startups-need-back-end-for-front-end-ee8e6ab8f575" target="_blank" rel="noopener">Why big companies and rapidly growing startups need Back-end for Front-end</a> </li>
-<li><a href="https://cloud.tencent.com/developer/article/1444653" target="_blank" rel="noopener">Backend For Frontend (BFF)</a> </li>
-<li><a href="https://nordicapis.com/building-a-backend-for-frontend-shim-for-your-microservices/" target="_blank" rel="noopener">Building a Backend for Frontend (BFF) For Your Microservices</a> </li>
-<li><a href="https://docs.microsoft.com/en-us/azure/architecture/patterns/backends-for-frontends" target="_blank" rel="noopener">Backends for Frontends pattern</a> </li>
-</ol>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="https://shimingwu.github.io/2020/07/20/%E5%85%B3%E4%BA%8EServerless%E7%9A%84%E4%BA%8C%E4%B8%89%E4%BA%8B-BFF/" data-id="ckhsvnfxm001czxr12oaa4wx3" class="article-share-link">Share</a>
-      
-      
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E5%89%8D%E7%AB%AF/" rel="tag">前端</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E6%9E%B6%E6%9E%84/" rel="tag">架构</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-理解CORS(1)" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2020/07/19/%E7%90%86%E8%A7%A3CORS(1)/" class="article-date">
-  <time datetime="2020-07-19T11:15:31.000Z" itemprop="datePublished">2020-07-19</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2020/07/19/%E7%90%86%E8%A7%A3CORS(1)/">理解CORS(1)</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>一年前在另外一个团队做Gateway API的时候，曾经因为要满足SOC2而研究过这个主题，但并没有好好记录下来。一年后不幸地被抓去做一个前端项目的PoC，又需要使用相关知识，于是记录一番。</p>
-<h2 id="1-Definition-of-an-origin（同源的定义）"><a href="#1-Definition-of-an-origin（同源的定义）" class="headerlink" title="1. Definition of an origin（同源的定义）"></a>1. Definition of an origin（同源的定义）</h2><p>在讨论跨域之前，我们首先要理解什么是“同源”，即same origin。首先，一个URL由以下几个部分组成：<br/><br><code>[schema]://[host]:[port]</code></p>
-<p>以下为几个例子，方便理解：<br>我们以<code>http://account.example.com/home/index.html</code>为对象进行对比。</p>
-<table>
-<thead>
-<tr>
-<th align="left">URL</th>
-<th align="center">是否同源</th>
-<th align="left">备注</th>
-</tr>
-</thead>
-<tbody><tr>
-<td align="left"><code>http://account.example.com/settings/one.html</code></td>
-<td align="center">是</td>
-<td align="left">Path并不属于同源比较对象。他们的schema，host与port完全温和所以不存在不同源的问题</td>
-</tr>
-<tr>
-<td align="left"><code>http://account.example.com/logout.html</code></td>
-<td align="center">是</td>
-<td align="left">Path并不属于同源比较对象。他们的schema，host与port完全温和所以不存在不同源的问题</td>
-</tr>
-<tr>
-<td align="left"><code>https://account.example.com/logout.html</code></td>
-<td align="center">否</td>
-<td align="left"><b>Schema</b>不同，一个是https一个是http</td>
-</tr>
-<tr>
-<td align="left"><code>http://profile.example.com/logout.html</code></td>
-<td align="center">否</td>
-<td align="left"><b>Host</b>不同，一个是profile一个是account</td>
-</tr>
-<tr>
-<td align="left"><code>http://account.example.com:1000/logout.html</code></td>
-<td align="center">否</td>
-<td align="left"><b>Port</b>不同，在http里面，默认的port是80，这个例子里是1000，所以不同源</td>
-</tr>
-</tbody></table>
-<br/>
-<br/>
-
-<h2 id="2-跨域资源共享（CORS"><a href="#2-跨域资源共享（CORS" class="headerlink" title="2. 跨域资源共享（CORS)"></a>2. 跨域资源共享（CORS)</h2><p>在介绍完同源的定义后，我们可以开始了解什么是同源策略（Same-origin Policy）以及什么是跨域资源共享（CORS，Cross-Orgin Resource Sharing）。</p>
-<ul>
-<li><b>Same-origin policy</b>: 一个简单但重要的浏览器安全策略。即一个网站只可以从自己的服务器加载资源。这个策略可以结合一些其他的安全策略比如httpOnly用来防止一些危险比如CSRF攻击、XSS攻击。</li>
-<li><b>CORS</b>: 一个用于处理跨域访问资源的标准、机制。Same-origin policy作为一个基本的保障用户安全的存在，它在一定程度上防止了恶意攻击，但是也限制了一些正常的访问。这就是为什么我们需要使用CORS来解决跨域问题。</li>
-</ul>
-<blockquote>
-<p>但是需要注意的是，跨域嵌入是允许的。浏览器允许加载页面中嵌入的来自不同源的scripts（脚本），图片以及媒体文件。</p>
-</blockquote>
-<br/>
-<br/>
-
-<h2 id="3-进行跨域资源共享的主体与请求"><a href="#3-进行跨域资源共享的主体与请求" class="headerlink" title="3. 进行跨域资源共享的主体与请求"></a>3. 进行跨域资源共享的主体与请求</h2><p>首先，我们要理解该过程里面的两个主体：浏览器与服务器。<br>在整个CORS通信里面，前端开发者不需要进行任何操作，所有的设置将有浏览器自动完成，比如添加request headers，发送pre-flight request等。所以对于前端的开发者而言，是否启用CORS，他们的代码都将是一样的。与此不同的是，服务器端必须进行恰当的设置，CORS通信才可以实现。</p>
-<p>其次，我们需要知道，在CORS里面有两种请求：简单请求（Simple Request）以及复杂请求（Complex Request）。</p>
-<p><b>简单请求:</b></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">(1) Http Method必须满足以下任意一种:</span><br><span class="line">  1. HEAD</span><br><span class="line">  2. GET</span><br><span class="line">  3. POST</span><br><span class="line"></span><br><span class="line">(2) Http headers里面包含了以下一个或者更多：</span><br><span class="line">  1. Accept</span><br><span class="line">  2. Accept-Language</span><br><span class="line">  3. Content-Language</span><br><span class="line">  4. Content-Type （但仅限于application&#x2F;x-www-form-urlencoded, multipart&#x2F;form-data, text&#x2F;plain这三种)</span><br></pre></td></tr></table></figure>
-
-<p><b>复杂请求：</b></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">所有不满足简单请求条件的都属于复杂请求。</span><br></pre></td></tr></table></figure>
-
-<p>那么为什么浏览器需要区分这两种请求呢？原因是这两种请求的处理是不一样的：</p>
-<ul>
-<li>所有的简单请求都不会触发CORS preflighted request</li>
-<li>任何可以不使用JavaScript也能触发的请求都属于简单请求，比如FORM POST或者使用<herf>的请求都是简单请求。且AJAX的跨域设计提到只要form可以发的请求，Ajax就可以发，而form一直都可以发出跨域请求，所以为了兼容form的设计，简单请求和复杂请求的处理也有不同的考虑。</li>
-</ul>
-<br/>
-<br/>
-
-<h2 id="4-跨域请求的流程"><a href="#4-跨域请求的流程" class="headerlink" title="4. 跨域请求的流程"></a>4. 跨域请求的流程</h2><h4 id="简单请求"><a href="#简单请求" class="headerlink" title="简单请求"></a>简单请求</h4><ol>
-<li>当用户开启一个页面并发送一个Ajax请求，浏览器会自动帮忙在请求里面加上<code>Origin</code>这个header。</li>
-<li>服务器会检查该header，并确认是否应该同意让该站点获取自己的资源。假如允许的话，则返回资源，并且response里面包含了<code>Access-Control-Allow-Origin: &lt;origin&gt;</code>这个header。</li>
-<li>当浏览器收到response后，它会检查<code>Access-Control-Allow-Origin: &lt;origin&gt;</code>这个header并且确认该header是否与当前的源吻合。如果不是，则拦截该response，反之则通过。假如服务器返回的是<code>Access-Control-Allow-Origin: *</code>，浏览器则会自动通过该response。</li>
-</ol>
-<img src="/2020/07/19/%E7%90%86%E8%A7%A3CORS(1)/CORS_Sequence_Simple_Request.png" class="" title="sipmle request CORS flow">
-
-<p>假设网站<code>http://a.example.com</code>想要访问<code>http://b.anotherexample.com</code>的资源，在没有设置CORS的情况下，则<code>http://a.example.com</code>会得到报错。而如果我们在<code>http://b.anotherexample.com</code>的服务器上设置了”Access-Control-Allow-Origin: *”则可以成功获得资源。简而言之，使用<code>Origin</code>与<code>Access-Control-Allow-Origin</code>就能完成最简单的CORS访问。在上图里面，服务器返回的是<code>Access-Control-Allow-Origin: *</code>，这代表了该资源可以被任意外域访问，这也就是为什么假如看到<code>*</code>，浏览器可以不需要检查。但是假如服务器端返回的是<code>Access-Control-Allow-Origin: http://a.example</code>这就代表了除了<code>http://a.example</code>其他外域均不允许访问该资源，这就是为什么浏览器会进行检查并且如果origin不一致就会拦截。</p>
-<h4 id="复杂请求"><a href="#复杂请求" class="headerlink" title="复杂请求"></a>复杂请求</h4><ol>
-<li>发送preflight request进行执行预检测。首先浏览器会使用<code>OPTIONS</code>方法发起该请求，服务器会告知浏览器是否允许该实际请求。<b>Preflight request实际上是用于避免CORS请求对于服务器的用户数据可能产生的未知影响。</b></li>
-<li>假如服务器同意了该请求，则浏览器会重复简单请求的流程，发送真正的请求。</li>
-</ol>
-<img src="/2020/07/19/%E7%90%86%E8%A7%A3CORS(1)/CORS_Sequence_Complex_Request.png" class="" title="sipmle request CORS flow">
-
-<p>从上图中，我们可以看出，我们将要发送的请求里面包含了一个自定义的header <code>X-PINGOTHER:pingpong</code>，于是需要进行预先检查：</p>
-<table>
-<thead>
-<tr>
-<th align="left">Header</th>
-<th align="left">解释</th>
-</tr>
-</thead>
-<tbody><tr>
-<td align="left"><code>Access-Control-Request-Method: POST</code></td>
-<td align="left">实际请求将会是POST，是否同意？</td>
-</tr>
-<tr>
-<td align="left"><code>Access-Control-Request-Headers: X-PINGOTHER, Content-Type</code></td>
-<td align="left">实际请求包含了<code>X-PINGOTHER</code>与<code>Content-Type</code>，是否同意？</td>
-</tr>
-</tbody></table>
-<p>服务器检查后，返回说：</p>
-<table>
-<thead>
-<tr>
-<th align="left">Header</th>
-<th align="left">解释</th>
-</tr>
-</thead>
-<tbody><tr>
-<td align="left"><code>Access-Control-Request-Method: POST, GET, OPTIONS</code></td>
-<td align="left">可以使用<code>POST</code>，<code>GET</code>和<code>OPTIONS</code>发起请求</td>
-</tr>
-<tr>
-<td align="left"><code>Access-Control-Request-Headers: X-PINGOTHER, Content-Type</code></td>
-<td align="left">允许携带这两个headers</td>
-</tr>
-<tr>
-<td align="left"><code>Access-Control-Max-Age: 86400</code></td>
-<td align="left">这个response的有效时间是86400秒，即24个小时。在24个小时内，相同的请求不需要再一次发送preflight request。这个有效时间将由浏览器进行管理，如果超过了最大时间，则实际请求不会继续有效。需要重新发送preflight request。</td>
-</tr>
-</tbody></table>
-<br/>
-<br/>
-
-
-
-
-
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="https://shimingwu.github.io/2020/07/19/%E7%90%86%E8%A7%A3CORS(1)/" data-id="ckhsvnfxn001ezxr11690c5cz" class="article-share-link">Share</a>
-      
-      
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E5%AE%89%E5%85%A8%E6%80%A7/" rel="tag">安全性</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-理解OAuth2(1)" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2020/07/09/%E7%90%86%E8%A7%A3OAuth2(1)/" class="article-date">
-  <time datetime="2020-07-09T16:59:27.000Z" itemprop="datePublished">2020-07-09</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2020/07/09/%E7%90%86%E8%A7%A3OAuth2(1)/">理解OAuth2(1)</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <br/>
-<br/>
-
-<p>两三年前在创业公司的时候，曾经使用过OAuth2，虽然对流程有着大致的理解，但是很多词汇以及术语总是记不清楚。这次的项目又一次需要用到这方面的知识，于是打算好好记一下，也顺便整理思路，希望能把东西讲明白。</p>
-<h2 id="1-OAuth2"><a href="#1-OAuth2" class="headerlink" title="1. OAuth2"></a>1. OAuth2</h2><p>OAuth2是目前较为流行的authorization机制，用来授权第三方应用，获得用户数据。</p>
-<br/>
-<br/>
-
-<h2 id="2-Authorization-and-Authentication"><a href="#2-Authorization-and-Authentication" class="headerlink" title="2. Authorization and Authentication"></a>2. Authorization and Authentication</h2><p>最开始，我们先需要理解的是两个概念：</p>
-<ul>
-<li><b>Authentication:</b><br>Validating a user is the person he or she claims to be.<br>确认用户。证明自己是该用户，比如提供密码来证明我的确是该账号的使用者。</li>
-<li><b>Authorization：</b><br>Validating what permission the user has.<br>确认用户权限。当一个用户证明了自己可以使用某应用后，他可以对该应用做什么。比如是普通用户，还是管理员等。</li>
-</ul>
-<p>打个比方，小明在公司是数据库管理员，小王在公司是财务。小明和小王都可以刷卡进公司系统，只需要他们证明自己是小明/小王即可，这就是authentication。<br>但是小明没有进入公司财务系统的权限，因为他不是财务。同样，小王也没有进入数据库的权限。这个就是他们的permission。所以只有在小明获得/展示他的数据库管理员的身份/职位的时候，他才会获得数据库的权限。这就是authorization。</p>
-<br/>
-<br/>
-
-<h2 id="3-OAuth2-0-专业术语"><a href="#3-OAuth2-0-专业术语" class="headerlink" title="3. OAuth2.0 专业术语"></a>3. OAuth2.0 专业术语</h2><ul>
-<li><b>Resource Owner:</b> 即用户，数据的拥有者。</li>
-<li><b>Client:</b> 用户想要使用的应用、网站等。</li>
-<li><b>Authorization Server:</b> 用户用来登录账户，提供权限的服务器。有的时候Authorization Server和Resource Server可以是同一个服务器。即该服务器既可以用来验证登录，也同时提供API服务。</li>
-<li><b>Resource Server:</b> 存储用户数据或者提供用户数据的API的服务器。</li>
-<li><b>Authorization Grant:</b> 这个Grant是一个凭证，它证明了用户同意该应用使用她/他的账户信息。</li>
-<li><b>Redirect URI:</b> 当用户同意登录后，跳转回该URI。</li>
-<li><b>Access Token:</b> 这个令牌可以证明请求是有效的。应用可以使用该令牌去Resource Server请求一些必需的用户资料（用户在Authorization Server已经同意了给予该权限）。</li>
-<li><b>Scope:</b> 定义了该应用可以获得的用户资源。比如可以获得头像信息，邮箱信息或者全部信息等等。</li>
-</ul>
-<p>一个很简单的场景。我想在lofter.com上发表文章，但是我不想在lofter上面注册lofter专用的账号了，我希望使用我的google账号来登录lofter.com并发表文章，于是我们有的下面的流程:<br>用户（<u>Resource Owner</u>）在浏览器输入”lofter.com”进入lofter网站（<u>Client</u>），点击“登录”，网站会跳转到”accounts.google.com”（<u>Authorization Server</u>)，google的登录界面出现，并显示出lofter想要使用的用户权限，比如获取头像信息，用户名（这些就是<u>scope</u>）等等，当用户同意，根据lofter的设置，用户会被带回lofter的<u>Redirect URI</u>且此时lofter获得了用户通过google颁发的凭证（<u>Authorization Grant</u>），通过这个凭证， lofter会再一次与”accounts.google.com”对话，交换<u>Access Token</u>，接下来，凭借着该<u>Access Token</u>，lofter就可以与<u>Resource Server</u>通信并获得头像信息以及用户名了。</p>
-<br/>
-<br/>
-
-<h2 id="4-Grant-Type-（授权模式）"><a href="#4-Grant-Type-（授权模式）" class="headerlink" title="4. Grant Type （授权模式）"></a>4. Grant Type （授权模式）</h2><p>在上面的场景中，我们注意到Authorization Grant的存在，即凭证、授权。并且，我们需要使用该凭证来换取令牌（Access Token）。这是为什么呢？<br>因为现实生活里面，不同的应用有不同的设计，有的网站可能是纯单界面应用（Single Page Application），或者Serverless，又或者是手机应用，它们有的只有前端没有服务器，有的有自己的服务器，这样的情况下，就导致了流程里某些需要使用服务器来储存获得安全性的设计无法实现。于是OAuth2.0里面就有了不同的Grant Type，来确保不同的应用可以选择适合自己的验证流程。</p>
-<p>目前常用的OAuth Grant Types有：</p>
-<ul>
-<li><b>Authorization Code （授权码模式）:</b><br>功能最完整，流程最严密的授权模式。在authorization server真正提供access token之前，client必须获得authorization code，获得了code后，client再次向authorization server进行access token exchange，并且该步骤是在后台服务器上执行的，对用户完全不可见，因此获得了一定的安全性。</li>
-<li><b>Implicit Grant（简化模式）：</b><br>该模式下，申请access token并不需要通过后台服务器，因此属于authorization code的简化版本。当用户在authorization server上同意了授权后，返回redirect URI的时候，URI里面的Hash部分已经包含了access token（从而省略了使用authorization code交换token这个步骤）。</li>
-<li><b>Client Credentials</b> </li>
-<li><b>Resource Owner Password Credentials</b> </li>
-</ul>
-<br/>
-<br/>
-
-<h2 id="5-OAuth2-0-Authorization-Code-Flow"><a href="#5-OAuth2-0-Authorization-Code-Flow" class="headerlink" title="5. OAuth2.0 Authorization Code Flow"></a>5. OAuth2.0 Authorization Code Flow</h2><p>下图为OAuth2.0 authorization code的简易流程。</p>
-<img src="/2020/07/09/%E7%90%86%E8%A7%A3OAuth2(1)/oauth2_authorization_code_flow.png" class="" title="This shows the authorization code flow">
-
-<br/>
-<br/>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="https://shimingwu.github.io/2020/07/09/%E7%90%86%E8%A7%A3OAuth2(1)/" data-id="ckhsvnfxp001hzxr17xcbeh57" class="article-share-link">Share</a>
-      
-      
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E5%8D%8F%E8%AE%AE/" rel="tag">协议</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E5%AE%89%E5%85%A8%E6%80%A7/" rel="tag">安全性</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-理解Vue的Render渲染函数" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2018/09/19/%E7%90%86%E8%A7%A3Vue%E7%9A%84Render%E6%B8%B2%E6%9F%93%E5%87%BD%E6%95%B0/" class="article-date">
-  <time datetime="2018-09-19T10:02:11.000Z" itemprop="datePublished">2018-09-19</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2018/09/19/%E7%90%86%E8%A7%A3Vue%E7%9A%84Render%E6%B8%B2%E6%9F%93%E5%87%BD%E6%95%B0/">理解Vue的Render渲染函数</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <br/>
-<br/>
-<br/>
-<br/>
-最近在尝试将Vue的SSR与.Net Core的Js SSR Middleware结合，让纯客户端应用转变为服务端渲染。发现自己对Vue的render函数很不了解，所以打算好好整理一下，至少理解个大概。
-<br/>
-<br/>
-
-<h2 id="1-HTML、节点与树（HTML-Nodes-and-Tree）"><a href="#1-HTML、节点与树（HTML-Nodes-and-Tree）" class="headerlink" title="1. HTML、节点与树（HTML, Nodes and Tree）"></a>1. HTML、节点与树（HTML, Nodes and Tree）</h2><p>首先，Vue的<a href="https://cn.vuejs.org/v2/guide/render-function.html" target="_blank" rel="noopener">官方文档</a>里提供了关于浏览器的“<a href="https://javascript.info/dom-nodes" target="_blank" rel="noopener">DOM Tree</a>”工作原理。</p>
-<blockquote>
-<p>每个元素都是一个节点。每片文字也是一个节点。甚至注释也都是节点。一个节点就是页面的一个部分。就像家谱树一样，每个节点都可以有孩子节点 (也就是说每个部分可以包含其它的一些部分)。</p>
-</blockquote>
-<p>最中心的思想则是：</p>
-<blockquote>
-<p>if something’s in HTML, then it also must be in the DOM tree.</p>
-</blockquote>
-<p>于是我们知道，对于浏览器而言，当它读到一段HTML代码，它会将这段HTML转成一个“DOM Tree（节点树）”。<br><br/><br><br/></p>
-<h2 id="2-什么是render（渲染）函数呢？"><a href="#2-什么是render（渲染）函数呢？" class="headerlink" title="2. 什么是render（渲染）函数呢？"></a>2. 什么是render（渲染）函数呢？</h2><p>Vue是通过 template（字符串模板）来创建HTML的。render函数与 template 十分相似，都是用来高效的更新所有这些节点的——准确的说，<a href="https://cn.vuejs.org/v2/api/#render" target="_blank" rel="noopener">render函数是字符串模板的代替方案，允许你发挥 JavaScript 最大的编程能力。</a><br><br/><br><br/></p>
-<h2 id="3-虚拟DOM（The-Virtual-DOM）"><a href="#3-虚拟DOM（The-Virtual-DOM）" class="headerlink" title="3. 虚拟DOM（The Virtual DOM）"></a>3. 虚拟DOM（The Virtual DOM）</h2><p>在了解了到底什么是render函数之后，下一步是理解这个函数如何工作的。</p>
-<blockquote>
-<p>该渲染函数接收一个 createElement 方法作为第一个参数用来创建 VNode。如果组件是一个函数组件，渲染函数还会接收一个额外的 context 参数，为没有实例的函数组件提供上下文信息。</p>
-</blockquote>
-<p>创建VNode，即Vue通过建立一个虚拟 DOM 对真实 DOM 发生的变化保持追踪。createElement 方法会返回一段信息，该信息会告诉 Vue 页面上需要渲染什么样的节点，及其子节点。而具体createElement 方法可能又需要另外一篇文章来解析了。又需要提及的是，Vue 的模板实际是编译成了 render 函数，一言以盖之，Vue利用render函数来创造真正的DOM Tree。<br><br/><br><br/></p>
-<h2 id="4-Vue-的渲染机制"><a href="#4-Vue-的渲染机制" class="headerlink" title="4. Vue 的渲染机制"></a>4. Vue 的渲染机制</h2><p>所以，Vue的渲染机制大致上可以这么说：<br>template → render function → virutal DOM → real DOM<br>template会被编译成render funciton， render function会创建虚拟DOM，虚拟DOM最后影响创造真实的DOM Tree。</p>
-<p>这里又可以提一下Vue的两个构建概念：<u>独立构建</u>与<u>运行时构建</u>。*<br>独立构建：包含模板编译器，渲染过程HTML字符串 → render函数 → VNode → 真实DOM节点<br>运行时构建：不包含模板编译器，渲染过程render函数 → VNode → 真实DOM节点<br>通过比较可以注意到，独立构建多了一个模板编译器。所以直接使用render函数可以做到省去编译器只使用运行时版本。<br><br/><br><br/></p>
-<h2 id="5-总结"><a href="#5-总结" class="headerlink" title="5. 总结"></a>5. 总结</h2><p>在读了官方文档、网上关于render function的文章以及稍作总结后，个人总结render函数其实是Vue 将HTML字符串，或者Js funciton、object转化成真正的DOM的一个中介。所以需要深入理解 createElement 到底可以接收什么参数以及 Virtual DOM 是如何作用的。</p>
-<p>*做笔记的时候发现 createElement 和 VNode 是两个很核心的知识点。应该需要用另外了解。<br><br/><br><br/><br><br/><br><br/></p>
-<p>参考文章</p>
-<ul>
-<li><a href="https://vuejs.org/v2/guide/render-function.html" target="_blank" rel="noopener">Vue官方文档—Render Functions &amp; JSX</a></li>
-<li><a href="https://www.w3cplus.com/vue/vue-render-function.html" target="_blank" rel="noopener">Vue 2.0学习笔记：Vue的render函数</a></li>
-<li><a href="https://segmentfault.com/a/1190000008291645" target="_blank" rel="noopener">Vue原理解析之Virtual Dom</a></li>
-</ul>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="https://shimingwu.github.io/2018/09/19/%E7%90%86%E8%A7%A3Vue%E7%9A%84Render%E6%B8%B2%E6%9F%93%E5%87%BD%E6%95%B0/" data-id="ckhsvnfxq001jzxr120411qww" class="article-share-link">Share</a>
-      
-      
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/VueJs/" rel="tag">VueJs</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E5%89%8D%E7%AB%AF/" rel="tag">前端</a></li></ul>
 
     </footer>
   </div>
@@ -1405,7 +1348,7 @@
 
   <nav id="page-nav">
     
-    <a class="extend prev" rel="prev" href="/">&amp;laquo; Prev</a><a class="page-number" href="/">1</a><span class="page-number current">2</span>
+    <a class="extend prev" rel="prev" href="/">&amp;laquo; Prev</a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><a class="extend next" rel="next" href="/page/3/">Next &amp;raquo;</a>
   </nav>
 
 </section>
@@ -1429,7 +1372,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">Tag Cloud</h3>
     <div class="widget tagcloud">
-      <a href="/tags/Algorithm/" style="font-size: 12.5px;">Algorithm</a> <a href="/tags/Big-Data/" style="font-size: 20px;">Big Data</a> <a href="/tags/Data-Structure/" style="font-size: 17.5px;">Data Structure</a> <a href="/tags/Distributed-Database/" style="font-size: 17.5px;">Distributed Database</a> <a href="/tags/LeetCode/" style="font-size: 12.5px;">LeetCode</a> <a href="/tags/VueJs/" style="font-size: 10px;">VueJs</a> <a href="/tags/%E5%89%8D%E7%AB%AF/" style="font-size: 15px;">前端</a> <a href="/tags/%E5%8D%8F%E8%AE%AE/" style="font-size: 10px;">协议</a> <a href="/tags/%E5%AE%89%E5%85%A8%E6%80%A7/" style="font-size: 12.5px;">安全性</a> <a href="/tags/%E5%B7%A5%E5%85%B7/" style="font-size: 10px;">工具</a> <a href="/tags/%E6%9E%B6%E6%9E%84/" style="font-size: 10px;">架构</a> <a href="/tags/%E7%AE%97%E6%B3%95/" style="font-size: 12.5px;">算法</a>
+      <a href="/tags/Algorithm/" style="font-size: 12.5px;">Algorithm</a> <a href="/tags/Big-Data/" style="font-size: 17.5px;">Big Data</a> <a href="/tags/Data-Structure/" style="font-size: 20px;">Data Structure</a> <a href="/tags/Distributed-Database/" style="font-size: 20px;">Distributed Database</a> <a href="/tags/LeetCode/" style="font-size: 12.5px;">LeetCode</a> <a href="/tags/VueJs/" style="font-size: 10px;">VueJs</a> <a href="/tags/%E5%89%8D%E7%AB%AF/" style="font-size: 15px;">前端</a> <a href="/tags/%E5%8D%8F%E8%AE%AE/" style="font-size: 10px;">协议</a> <a href="/tags/%E5%AE%89%E5%85%A8%E6%80%A7/" style="font-size: 12.5px;">安全性</a> <a href="/tags/%E5%B7%A5%E5%85%B7/" style="font-size: 10px;">工具</a> <a href="/tags/%E6%9E%B6%E6%9E%84/" style="font-size: 10px;">架构</a> <a href="/tags/%E7%AE%97%E6%B3%95/" style="font-size: 12.5px;">算法</a>
     </div>
   </div>
 
@@ -1451,23 +1394,23 @@
       <ul>
         
           <li>
+            <a href="/2020/11/26/Distributed-Database-System-9/">Distributed Database System (9)</a>
+          </li>
+        
+          <li>
+            <a href="/2020/11/26/Distributed-Database-System-8/">Distributed Database System (8)</a>
+          </li>
+        
+          <li>
+            <a href="/2020/11/26/Distributed-Database-System-7/">Distributed Database System (7)</a>
+          </li>
+        
+          <li>
+            <a href="/2020/11/26/Distributed-Database-System-6/">Distributed Database System (6)</a>
+          </li>
+        
+          <li>
             <a href="/2020/11/22/Distributed-Database-System-5/">Distributed Database System (5)</a>
-          </li>
-        
-          <li>
-            <a href="/2020/11/22/Distributed-Database-System-4/">Distributed Database System (4)</a>
-          </li>
-        
-          <li>
-            <a href="/2020/11/21/Distributed-Database-System-3/">Distributed Database System (3)</a>
-          </li>
-        
-          <li>
-            <a href="/2020/11/21/Distributed-Database-System-2/">Distributed Database System (2)</a>
-          </li>
-        
-          <li>
-            <a href="/2020/11/21/Distributed-Database-System-1/">Distributed Database System (1)</a>
           </li>
         
       </ul>

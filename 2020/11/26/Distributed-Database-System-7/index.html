@@ -5,19 +5,20 @@
   
 
   
-  <title>BigData(1) | Shiming&#39;s Blog</title>
+  <title>Distributed Database System (7) | Shiming&#39;s Blog</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="This is revision note for NUS master study of CS5425 Big Data Systems for Data Science. 5V for big data Volume: The size&#x2F;scale of data Velocity: The speed of input of data (like data streaming) Variet">
+  <meta name="description" content="This is revision note for NUS master study of CS5424 Distributed Databases. Raft Consensus AlgorithmServer States: Follower Passive but expects regular heartbeats from leader   Candidate Issues Reques">
 <meta property="og:type" content="article">
-<meta property="og:title" content="BigData(1)">
-<meta property="og:url" content="https://shimingwu.github.io/2020/11/08/BigData-1/index.html">
+<meta property="og:title" content="Distributed Database System (7)">
+<meta property="og:url" content="https://shimingwu.github.io/2020/11/26/Distributed-Database-System-7/index.html">
 <meta property="og:site_name" content="Shiming&#39;s Blog">
-<meta property="og:description" content="This is revision note for NUS master study of CS5425 Big Data Systems for Data Science. 5V for big data Volume: The size&#x2F;scale of data Velocity: The speed of input of data (like data streaming) Variet">
+<meta property="og:description" content="This is revision note for NUS master study of CS5424 Distributed Databases. Raft Consensus AlgorithmServer States: Follower Passive but expects regular heartbeats from leader   Candidate Issues Reques">
 <meta property="og:locale" content="en_US">
-<meta property="article:published_time" content="2020-11-08T16:50:13.000Z">
-<meta property="article:modified_time" content="2020-12-02T13:44:01.071Z">
+<meta property="article:published_time" content="2020-11-26T16:21:47.000Z">
+<meta property="article:modified_time" content="2020-12-02T13:44:01.079Z">
 <meta property="article:author" content="Shiming Wu">
-<meta property="article:tag" content="Big Data">
+<meta property="article:tag" content="Distributed Database">
+<meta property="article:tag" content="Data Structure">
 <meta name="twitter:card" content="summary">
   
     <link rel="alternate" href="/atom.xml" title="Shiming&#39;s Blog" type="application/atom+xml">
@@ -67,10 +68,10 @@
   </div>
 </header>
       <div class="outer">
-        <section id="main"><article id="post-BigData-1" class="article article-type-post" itemscope itemprop="blogPost">
+        <section id="main"><article id="post-Distributed-Database-System-7" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
-    <a href="/2020/11/08/BigData-1/" class="article-date">
-  <time datetime="2020-11-08T16:50:13.000Z" itemprop="datePublished">2020-11-08</time>
+    <a href="/2020/11/26/Distributed-Database-System-7/" class="article-date">
+  <time datetime="2020-11-26T16:21:47.000Z" itemprop="datePublished">2020-11-26</time>
 </a>
     
   </div>
@@ -81,7 +82,7 @@
         
   
     <h1 class="article-title" itemprop="name">
-      BigData(1)
+      Distributed Database System (7)
     </h1>
   
 
@@ -89,41 +90,49 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p>This is revision note for NUS master study of CS5425 Big Data Systems for Data Science.</p>
-<h2 id="5V-for-big-data"><a href="#5V-for-big-data" class="headerlink" title="5V for big data"></a>5V for big data</h2><ul>
-<li><code>Volume</code>: The size/scale of data</li>
-<li><code>Velocity</code>: The speed of input of data (like data streaming)</li>
-<li><code>Variety</code>: The different structures of data. For example, images, articles…</li>
-<li><code>Veracity</code>: The quality of data. </li>
-<li><code>Value</code>: The value brought by the data</li>
+        <p>This is revision note for NUS master study of CS5424 Distributed Databases.</p>
+<h2 id="Raft-Consensus-Algorithm"><a href="#Raft-Consensus-Algorithm" class="headerlink" title="Raft Consensus Algorithm"></a>Raft Consensus Algorithm</h2><h3 id="Server-States"><a href="#Server-States" class="headerlink" title="Server States:"></a>Server States:</h3><ul>
+<li>Follower<ul>
+<li>Passive but expects regular heartbeats from leader</li>
 </ul>
-<p>Nowadays, the frequent network activities result in a huge amount of data (Volume). To process these data, big data technology is required. Furthermore, the speed to process data is important (Velocity). For example, if we cannot analyze the data obtained within certain period of time, the value of data will be lost (Value), like detecting the system error in transport system of a city. Besides, there are multiple types of data are generated (Variety). Lastly, even if the data can be processed in a huge volume fast, the quality of both data and results should be taken care of (Veracity).</p>
-<h2 id="Infrastructure-of-big-data"><a href="#Infrastructure-of-big-data" class="headerlink" title="Infrastructure of big data"></a>Infrastructure of big data</h2><ul>
-<li><code>Cloud Computing</code></li>
-<li><code>Data Center</code></li>
+</li>
+<li>Candidate<ul>
+<li>Issues RequestVote RPCs to get elected as leader</li>
 </ul>
-<p>Cloud computing serves as an infrastructure to support the big data processing and calculation. There are three main serves provided by the cloud computing:</p>
-<ul>
-<li><code>IaaS</code>: Infrastructure as a Service. With this, the operation cost can be saved.</li>
-<li><code>PaaS</code>: Platform as a Service. Users can configure certain platforms like databases.</li>
-<li><code>SaaS</code>: Software as a Service. Users can directly consume the software like Gmail.</li>
+</li>
+<li>Leader<ul>
+<li>handles client interactions &amp; issues AppendEntries RPCs<ul>
+<li>Replicate its log</li>
+<li>Sends heartbeats to maintain leadership</li>
 </ul>
-<p>With these, everything can be provided as a service and it helps to save cost, provide ‘infintie’ calculating/storage capacity to users and users  can utilize these on demand. At the same, Cloud Computing also contributes a lot in terms of data generating. Thus, it is a data provider, at the same time, also a solution provider.</p>
-<p>Data center serves as a key infrastructure of cloud computing. A data center mainly has three blocks:</p>
-<ul>
-<li><code>blade server</code>: refer to a normal server</li>
-<li><code>rack</code>: a rack consists of dozens of servers</li>
-<li><code>data center</code>: a data center consists of many racks</li>
+</li>
 </ul>
-<p>The transfer of data is expensive especially when a data needs to be sent across the network.</p>
+</li>
+</ul>
+<h2 id="Term"><a href="#Term" class="headerlink" title="Term"></a>Term</h2><p>Raft算法将时间分为一个个的任期（term），每一个term的开始都是Leader选举。在成功选举Leader之后，Leader会在整个term内管理整个集群。如果Leader选举失败，该term就会因为没有Leader而结束。</p>
+<h2 id="Remote-Procedure-Calls-RPCs"><a href="#Remote-Procedure-Calls-RPCs" class="headerlink" title="Remote Procedure Calls (RPCs)"></a>Remote Procedure Calls (RPCs)</h2><ul>
+<li>RequestVote RPC<ul>
+<li>Candidate发送RequestVote RPC去请求成为leader</li>
+</ul>
+</li>
+<li>AppendEntries RPC<ul>
+<li>Leader用AppendEntries RPC发送log和heartbeat</li>
+</ul>
+</li>
+</ul>
+<h2 id="Log完整度"><a href="#Log完整度" class="headerlink" title="Log完整度"></a>Log完整度</h2><p>X的log比Y的log更完整的情况只有：</p>
+<ol>
+<li>X的log中的最后一个term比Y的log中的最后一个term大</li>
+<li>term相同，但是X的最后一个index更大。</li>
+</ol>
 
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://shimingwu.github.io/2020/11/08/BigData-1/" data-id="cki7gopeq000hzprvhclfe6gt" class="article-share-link">Share</a>
+      <a data-url="https://shimingwu.github.io/2020/11/26/Distributed-Database-System-7/" data-id="cki7gopf9001czprvbi4b3uda" class="article-share-link">Share</a>
       
       
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Big-Data/" rel="tag">Big Data</a></li></ul>
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Data-Structure/" rel="tag">Data Structure</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Distributed-Database/" rel="tag">Distributed Database</a></li></ul>
 
     </footer>
   </div>
@@ -131,19 +140,19 @@
     
 <nav id="article-nav">
   
-    <a href="/2020/11/08/BigData-2/" id="article-nav-newer" class="article-nav-link-wrap">
+    <a href="/2020/11/26/Distributed-Database-System-8/" id="article-nav-newer" class="article-nav-link-wrap">
       <strong class="article-nav-caption">Newer</strong>
       <div class="article-nav-title">
         
-          BigData(2)
+          Distributed Database System (8)
         
       </div>
     </a>
   
   
-    <a href="/2020/09/26/LeetCode-Largest-Number/" id="article-nav-older" class="article-nav-link-wrap">
+    <a href="/2020/11/26/Distributed-Database-System-6/" id="article-nav-older" class="article-nav-link-wrap">
       <strong class="article-nav-caption">Older</strong>
-      <div class="article-nav-title">LeetCode Largest Number</div>
+      <div class="article-nav-title">Distributed Database System (6)</div>
     </a>
   
 </nav>

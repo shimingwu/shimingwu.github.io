@@ -66,6 +66,379 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-Distributed-Database-System-9" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/11/26/Distributed-Database-System-9/" class="article-date">
+  <time datetime="2020-11-26T19:53:43.000Z" itemprop="datePublished">2020-11-26</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/11/26/Distributed-Database-System-9/">Distributed Database System (9)</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>This is revision note for NUS master study of CS5424 Distributed Databases.</p>
+<h2 id="Query-Processing"><a href="#Query-Processing" class="headerlink" title="Query Processing"></a>Query Processing</h2><p>Translates query into a query plan that minimizes some cost function</p>
+<ul>
+<li>Minimize total cost<ul>
+<li>CPU cost, I/O cost, &amp; communication cost</li>
+</ul>
+</li>
+<li>Minimize response time<ul>
+<li>Time elapsed for query execution</li>
+</ul>
+</li>
+</ul>
+<h3 id="Steps"><a href="#Steps" class="headerlink" title="Steps"></a>Steps</h3><ol>
+<li>Query rewriting<ul>
+<li>Query decomposition</li>
+<li>Data localization</li>
+</ul>
+</li>
+<li>Global query optimization<ul>
+<li>Finds an optimal execution plan for query</li>
+</ul>
+</li>
+<li>Distributed query execution<ul>
+<li>Executes query plan to compute query result</li>
+</ul>
+</li>
+</ol>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://shimingwu.github.io/2020/11/26/Distributed-Database-System-9/" data-id="cki7gopfc001hzprv3p20h0g0" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Data-Structure/" rel="tag">Data Structure</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Distributed-Database/" rel="tag">Distributed Database</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-Distributed-Database-System-8" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/11/26/Distributed-Database-System-8/" class="article-date">
+  <time datetime="2020-11-26T17:48:28.000Z" itemprop="datePublished">2020-11-26</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/11/26/Distributed-Database-System-8/">Distributed Database System (8)</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>This is revision note for NUS master study of CS5424 Distributed Databases.</p>
+<h2 id="Consistency-Levels"><a href="#Consistency-Levels" class="headerlink" title="Consistency Levels"></a>Consistency Levels</h2><ul>
+<li>Strong Consistency<ul>
+<li>See all previous writes</li>
+</ul>
+</li>
+<li>Eventual Consistency<ul>
+<li>See subset of previous writes</li>
+</ul>
+</li>
+<li>Consistent Prefix<ul>
+<li>See initial sequence of writes</li>
+</ul>
+</li>
+<li>Bounded Staleness<ul>
+<li>See all “old” writes</li>
+</ul>
+</li>
+<li>Monotonic Reads<ul>
+<li>See increasing subset of writes</li>
+</ul>
+</li>
+<li>Read My Writes<ul>
+<li>See all writes performed by reader</li>
+</ul>
+</li>
+</ul>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://shimingwu.github.io/2020/11/26/Distributed-Database-System-8/" data-id="cki7gopfa001ezprv3rjx398k" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Data-Structure/" rel="tag">Data Structure</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Distributed-Database/" rel="tag">Distributed Database</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-Distributed-Database-System-7" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/11/26/Distributed-Database-System-7/" class="article-date">
+  <time datetime="2020-11-26T16:21:47.000Z" itemprop="datePublished">2020-11-26</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/11/26/Distributed-Database-System-7/">Distributed Database System (7)</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>This is revision note for NUS master study of CS5424 Distributed Databases.</p>
+<h2 id="Raft-Consensus-Algorithm"><a href="#Raft-Consensus-Algorithm" class="headerlink" title="Raft Consensus Algorithm"></a>Raft Consensus Algorithm</h2><h3 id="Server-States"><a href="#Server-States" class="headerlink" title="Server States:"></a>Server States:</h3><ul>
+<li>Follower<ul>
+<li>Passive but expects regular heartbeats from leader</li>
+</ul>
+</li>
+<li>Candidate<ul>
+<li>Issues RequestVote RPCs to get elected as leader</li>
+</ul>
+</li>
+<li>Leader<ul>
+<li>handles client interactions &amp; issues AppendEntries RPCs<ul>
+<li>Replicate its log</li>
+<li>Sends heartbeats to maintain leadership</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h2 id="Term"><a href="#Term" class="headerlink" title="Term"></a>Term</h2><p>Raft算法将时间分为一个个的任期（term），每一个term的开始都是Leader选举。在成功选举Leader之后，Leader会在整个term内管理整个集群。如果Leader选举失败，该term就会因为没有Leader而结束。</p>
+<h2 id="Remote-Procedure-Calls-RPCs"><a href="#Remote-Procedure-Calls-RPCs" class="headerlink" title="Remote Procedure Calls (RPCs)"></a>Remote Procedure Calls (RPCs)</h2><ul>
+<li>RequestVote RPC<ul>
+<li>Candidate发送RequestVote RPC去请求成为leader</li>
+</ul>
+</li>
+<li>AppendEntries RPC<ul>
+<li>Leader用AppendEntries RPC发送log和heartbeat</li>
+</ul>
+</li>
+</ul>
+<h2 id="Log完整度"><a href="#Log完整度" class="headerlink" title="Log完整度"></a>Log完整度</h2><p>X的log比Y的log更完整的情况只有：</p>
+<ol>
+<li>X的log中的最后一个term比Y的log中的最后一个term大</li>
+<li>term相同，但是X的最后一个index更大。</li>
+</ol>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://shimingwu.github.io/2020/11/26/Distributed-Database-System-7/" data-id="cki7gopf9001czprvbi4b3uda" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Data-Structure/" rel="tag">Data Structure</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Distributed-Database/" rel="tag">Distributed Database</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-Distributed-Database-System-6" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/11/26/Distributed-Database-System-6/" class="article-date">
+  <time datetime="2020-11-26T12:42:58.000Z" itemprop="datePublished">2020-11-26</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/11/26/Distributed-Database-System-6/">Distributed Database System (6)</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>This is revision note for NUS master study of CS5424 Distributed Databases.</p>
+<h2 id="One-Copy-Database"><a href="#One-Copy-Database" class="headerlink" title="One-Copy Database"></a>One-Copy Database</h2><ul>
+<li>One-copy serializable (1SR)</li>
+<li>Mutual Consistency<ul>
+<li>Strong mutual consistency</li>
+<li>Weak mutual consistency</li>
+</ul>
+</li>
+</ul>
+<h2 id="Replicas-Update"><a href="#Replicas-Update" class="headerlink" title="Replicas Update"></a>Replicas Update</h2><ul>
+<li>DBMS-level replication<ul>
+<li>Statement-based replication<br>直接发statement</li>
+<li>Write-ahead log (WAL) shipping </li>
+</ul>
+</li>
+<li>Application-level replication</li>
+</ul>
+<h2 id="Replication-Protocols"><a href="#Replication-Protocols" class="headerlink" title="Replication Protocols"></a>Replication Protocols</h2><img src="/2020/11/26/Distributed-Database-System-6/replication_protocols.png" class="" title="replication_protocols">
+
+<h3 id="When-are-updates-propagated-to-copies"><a href="#When-are-updates-propagated-to-copies" class="headerlink" title="When are updates propagated to copies"></a>When are updates propagated to copies</h3><ul>
+<li>Eager (Synchronous) update:<ul>
+<li>Strong mutual consistency</li>
+<li>Based on read-one-write-all (ROWA) protocols</li>
+</ul>
+</li>
+<li>Lazy (Asynchronous) update:<ul>
+<li>Need to ensure that updates are applied in the <strong>same order</strong> to all replicas</li>
+</ul>
+</li>
+</ul>
+<h3 id="Where-are-updates-allowed-to-occur"><a href="#Where-are-updates-allowed-to-occur" class="headerlink" title="Where are updates allowed to occur"></a>Where are updates allowed to occur</h3><ul>
+<li>Centralized technique:<ul>
+<li>Master copy updated first</li>
+</ul>
+</li>
+<li>Distributed technique:<ul>
+<li>Any site can update first</li>
+</ul>
+</li>
+</ul>
+<h3 id="Protocols"><a href="#Protocols" class="headerlink" title="Protocols"></a>Protocols</h3><ul>
+<li>Eager Centralized Protocols<ul>
+<li>Eager Single-Master Protocol: 有一个single master，同时也是lock manager。<ul>
+<li>Read：由TC问一下master拿S-lock，从哪个site读都行</li>
+<li>Write：由TC问一下master拿X-lock，master进行写操作，再保证其他site也进行写操作。</li>
+</ul>
+</li>
+<li>Eager Primary Copy Protocol: master有着primary copy。更新不同的数据，master不一样。其他和single-master一样。</li>
+</ul>
+</li>
+<li>Eager Distributed Protocols<ul>
+<li>Read：先看看自己有没有数据备份，有的话，直接读，没有的话，则问别人</li>
+<li>Write：先看看自己有没有数据备份，有的话，直接写，没有的话，则问别人</li>
+</ul>
+</li>
+<li>Lazy Centralized Protocols<ul>
+<li>Lazy Single Master: There is a single master site containing master copies of all objects</li>
+<li>Refresh transaction</li>
+<li>一个T被commit后，master告诉TC结束了，用同一个order对其他的site进行更新。更新使用refresh transaction的方式。</li>
+</ul>
+</li>
+<li>Lazy Distributed Protocols</li>
+</ul>
+<blockquote>
+<p>In lazy protocol, the execution is not necessary 1SR</p>
+</blockquote>
+<h2 id="Last-Writer-Wins-Heuristic"><a href="#Last-Writer-Wins-Heuristic" class="headerlink" title="Last-Writer-Wins Heuristic"></a>Last-Writer-Wins Heuristic</h2><p>为了避免写的冲突导致replicas的状态不一致，后发生的write会直接无视前一个write写的值直接执行覆盖。（blind write）</p>
+<h2 id="Quorum-Consensus-QC-Protocol"><a href="#Quorum-Consensus-QC-Protocol" class="headerlink" title="Quorum Consensus (QC) Protocol"></a>Quorum Consensus (QC) Protocol</h2><ol>
+<li><p>Tr (O) + Tw(O) &gt; Wt(O)</p>
+</li>
+<li><p>2 × Tw(O) &gt; Wt(O)</p>
+</li>
+<li><p>The sum of read and write threshold must exceed the total weights of all replicas. This helps to ensure any next subsequent read operation will read an updated value performed by write.</p>
+</li>
+<li><p>2 * Tw(O) &gt; Wt(O) : Prevent two concurrent write operations.</p>
+</li>
+</ol>
+<h2 id="Handling-Failures"><a href="#Handling-Failures" class="headerlink" title="Handling Failures"></a>Handling Failures</h2><ul>
+<li>Failure of Slave Sites<ul>
+<li>Lazy replication<ul>
+<li>Synchronize unavailable replicas later when they become available</li>
+</ul>
+</li>
+<li>Eager replication<ul>
+<li>ROWA (Read-One/Write-All)</li>
+<li>ROWAA (Read-One/Write-All Available)<blockquote>
+<p>Relaxation of ROWA protocol. Do not require updating of all replicas but only available replicas.</p>
+</blockquote>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>Failure of Master Site<ul>
+<li>Elect a new master site<ul>
+<li>选择想要的partition。如果多个partition且每个partition都有一个master，会产生数据不一致的问题。选择partition的算法：<ol>
+<li>Simple algorithm</li>
+<li>Majority consensus algorithm</li>
+<li>Quorum consensus algorithm</li>
+</ol>
+</li>
+<li>如果选择的partition没有可以工作的master，则选举新的master<ol>
+<li>Consensus algorithm</li>
+</ol>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h3 id="Simple-Algorithm"><a href="#Simple-Algorithm" class="headerlink" title="Simple Algorithm"></a>Simple Algorithm</h3><p>选择有可用master的partition。</p>
+<h3 id="Majority-Consensus-Algorithm"><a href="#Majority-Consensus-Algorithm" class="headerlink" title="Majority Consensus Algorithm"></a>Majority Consensus Algorithm</h3><p>选择node数多的（大于一半数量）的partition。</p>
+<h3 id="Quorum-Consensus-Algorithm"><a href="#Quorum-Consensus-Algorithm" class="headerlink" title="Quorum Consensus Algorithm"></a>Quorum Consensus Algorithm</h3><p>有权重。选择权重大的作为新的partition。</p>
+<h2 id="CAP-Theorem"><a href="#CAP-Theorem" class="headerlink" title="CAP Theorem"></a>CAP Theorem</h2><h3 id="CAP"><a href="#CAP" class="headerlink" title="CAP"></a>CAP</h3><ul>
+<li><p>Data Consistency</p>
+</li>
+<li><p>System Availability</p>
+</li>
+<li><p>Tolerance to Network Partitions</p>
+</li>
+<li><p>Forfeit consistency (丧失一致性)</p>
+<ul>
+<li>Resume execution on a selected partition</li>
+<li>Data could become inconsistent if the selected partition requires a new master site</li>
+</ul>
+</li>
+<li><p>Forfeit availability （丧失可用性）</p>
+<ul>
+<li>Wait for network to recover before resuming execution</li>
+</ul>
+</li>
+</ul>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://shimingwu.github.io/2020/11/26/Distributed-Database-System-6/" data-id="cki7gopf80019zprveysj965c" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Data-Structure/" rel="tag">Data Structure</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Distributed-Database/" rel="tag">Distributed Database</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
     <article id="post-Distributed-Database-System-5" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
     <a href="/2020/11/22/Distributed-Database-System-5/" class="article-date">
@@ -182,7 +555,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://shimingwu.github.io/2020/11/22/Distributed-Database-System-5/" data-id="ckhsvnfxg0014zxr1bwf41r19" class="article-share-link">Share</a>
+      <a data-url="https://shimingwu.github.io/2020/11/22/Distributed-Database-System-5/" data-id="cki7gopf70017zprvaka54iab" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Data-Structure/" rel="tag">Data Structure</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Distributed-Database/" rel="tag">Distributed Database</a></li></ul>
@@ -475,7 +848,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://shimingwu.github.io/2020/11/22/Distributed-Database-System-4/" data-id="ckhsvnfxf0012zxr1hxx11me3" class="article-share-link">Share</a>
+      <a data-url="https://shimingwu.github.io/2020/11/22/Distributed-Database-System-4/" data-id="cki7gopf60014zprvc0r42bm3" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Data-Structure/" rel="tag">Data Structure</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Distributed-Database/" rel="tag">Distributed Database</a></li></ul>
@@ -562,7 +935,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://shimingwu.github.io/2020/11/21/Distributed-Database-System-3/" data-id="ckhsvnfxd000zzxr122jd3y5b" class="article-share-link">Share</a>
+      <a data-url="https://shimingwu.github.io/2020/11/21/Distributed-Database-System-3/" data-id="cki7gopf40012zprvgemqhkbk" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Data-Structure/" rel="tag">Data Structure</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Distributed-Database/" rel="tag">Distributed Database</a></li></ul>
@@ -682,7 +1055,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://shimingwu.github.io/2020/11/21/Distributed-Database-System-2/" data-id="ckhsvnfxc000xzxr1g7go5ryo" class="article-share-link">Share</a>
+      <a data-url="https://shimingwu.github.io/2020/11/21/Distributed-Database-System-2/" data-id="cki7gopf3000zzprvd9lcaedu" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Data-Structure/" rel="tag">Data Structure</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Distributed-Database/" rel="tag">Distributed Database</a></li></ul>
@@ -784,7 +1157,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://shimingwu.github.io/2020/11/21/Distributed-Database-System-1/" data-id="ckhsvnfxb000vzxr101h7cmds" class="article-share-link">Share</a>
+      <a data-url="https://shimingwu.github.io/2020/11/21/Distributed-Database-System-1/" data-id="cki7gopf2000yzprvdyn19wm0" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Data-Structure/" rel="tag">Data Structure</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Distributed-Database/" rel="tag">Distributed Database</a></li></ul>
@@ -896,391 +1269,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://shimingwu.github.io/2020/11/12/BigData-8/" data-id="ckhsvnfxa000uzxr1erhp7zbo" class="article-share-link">Share</a>
-      
-      
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Big-Data/" rel="tag">Big Data</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-BigData-7" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2020/11/10/BigData-7/" class="article-date">
-  <time datetime="2020-11-10T21:30:24.000Z" itemprop="datePublished">2020-11-10</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2020/11/10/BigData-7/">BigData(7)</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>This is revision note for NUS master study of CS5425 Big Data Systems for Data Science.</p>
-<h2 id="Link-Analysis-Algorithms"><a href="#Link-Analysis-Algorithms" class="headerlink" title="Link Analysis Algorithms"></a>Link Analysis Algorithms</h2><p>There are three algorithms involved to compute the <strong>importance</strong> of nodes in the graph.</p>
-<ul>
-<li><code>Page Rank</code></li>
-<li><code>Topic-Specific (Personalized) Page Rank</code></li>
-<li><code>Web Spam Detection Algorithms</code></li>
-</ul>
-<h2 id="Page-Rank"><a href="#Page-Rank" class="headerlink" title="Page Rank"></a>Page Rank</h2><p>In page rank, the higher the score, the more important a node is. There is one important property of this algorithm, <strong>a page is important if it is pointed by other important pages.</strong></p>
-<img src="/2020/11/10/BigData-7/flow_equation.png" class="" title="flow_equation">
-
-<p>A flow equation is used to describe the rank.</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">For node a, we can see that there are 2 outgoing links, each of the link will have a&#x2F;2.</span><br><span class="line">Similarly, node y has two outgoings, so each link is y&#x2F;2.</span><br><span class="line">For node m, only one outgoing, thus, link has m.</span><br><span class="line"></span><br><span class="line">To get the rank of y, sum up all incoming links:</span><br><span class="line">y&#x2F;2 + a&#x2F;2</span><br><span class="line"></span><br><span class="line">To get the rank of a, sum up all incoming links:</span><br><span class="line">y&#x2F;2 + m</span><br><span class="line"></span><br><span class="line">To get the rank of m, sum up all incoming links:</span><br><span class="line">a&#x2F;2</span><br></pre></td></tr></table></figure>
-<p>Thus, the flow equation is:</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">ry &#x3D; ry&#x2F;2 + ra&#x2F;2</span><br><span class="line">ra &#x3D; ry&#x2F;2 + rm</span><br><span class="line">rm &#x3D; ra&#x2F;2</span><br></pre></td></tr></table></figure>
-<p>As there are three unknowns, three equations without constants, we add one more constraint to force the uniqueness:</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ry + ra + rm &#x3D; 1</span><br></pre></td></tr></table></figure>
-<p>With this, we are able to calculate the page rank. However, the calculation will be very heavy when there is a large number of nodes.</p>
-<h2 id="Power-iteration"><a href="#Power-iteration" class="headerlink" title="Power iteration"></a>Power iteration</h2><p>There are two parts involved in <code>power iteration</code>:</p>
-<ul>
-<li><code>Stochastic adjacency matrix M</code></li>
-<li><code>Eigenvector</code></li>
-</ul>
-<p>From above, we can build a stochastic adjacency matrix M:</p>
-
-
-<p>Apply the power iteration:</p>
-
-
-<h2 id="Random-Teleports"><a href="#Random-Teleports" class="headerlink" title="Random Teleports"></a>Random Teleports</h2><ol>
-<li><p><strong>Dead Ends</strong>. The result might not converge:<br>Node <code>A</code> points to Node <code>B</code> and Node B points to Node <code>A</code>, <code>A</code> &lt;—&gt; <code>B</code></p>
-</li>
-<li><p><strong>Spider traps</strong>. Importance information leaks out:<br>Node <code>A</code> points to Node <code>B</code>, <code>A</code> —&gt; <code>B</code></p>
-</li>
-</ol>
-<p>To solve these, <code>Teleports</code> is introduced by Google. The solution is that in each ‘flow’, it has certain opportunity to jump to other nodes (not the linked one).</p>
-<img src="/2020/11/10/BigData-7/illustration_random_teleport.png" class="" title="illustration_random_teleport">
-<img src="/2020/11/10/BigData-7/illustration_random_teleport_calculation.png" class="" title="illustration_random_teleport_calculation">
-
-<h2 id="Topic-Specific-PageRank"><a href="#Topic-Specific-PageRank" class="headerlink" title="Topic-Specific PageRank"></a>Topic-Specific PageRank</h2><p>The evaluation is not just conducted for the popularity but on the topic as well. To achieve this, the probability assigned for teleport is not consistent for all nodes. Instead, <strong>when a walker teleports, only a page in a set S which only includes pages are relevant to the topic will be picked.</strong></p>
-<h2 id="SimRank"><a href="#SimRank" class="headerlink" title="SimRank"></a>SimRank</h2><blockquote>
-<p>Effectively, SimRank is a measure that says “two objects are considered to be similar if they are referenced by similar objects.”</p>
-</blockquote>
-<h2 id="TrustRank"><a href="#TrustRank" class="headerlink" title="TrustRank"></a>TrustRank</h2><ul>
-<li><code>Link Farms</code>: <code>Inaccessible pages</code>, <code>Accessible pages</code> and <code>Owned pages</code></li>
-</ul>
-<h2 id="HITS"><a href="#HITS" class="headerlink" title="HITS"></a>HITS</h2><ul>
-<li><code>Hubs</code> and <code>Authorities</code></li>
-</ul>
-<p><strong>Hubs</strong><br>Quality as an expert. Total sum of votes for authorities pointed to.</p>
-<p><strong>Authority</strong><br>Quality as a content. Total sum of votes coming from experts.</p>
-<blockquote>
-<p>Authorities are pages containing useful information like Newspaper home pages, Course home pages and Home pages of auto manufacturers</p>
-</blockquote>
-<blockquote>
-<p>Hubs are pages that link to authorities like List of newspapers, Course bulletin and List of US auto manufacturers</p>
-</blockquote>
-<img src="/2020/11/10/BigData-7/HITS_flow.png" class="" title="HITS_flow">
-
-
-
-<h2 id="Difference-between-PageRank-and-HITS"><a href="#Difference-between-PageRank-and-HITS" class="headerlink" title="Difference between PageRank and HITS"></a>Difference between PageRank and HITS</h2><ul>
-<li>In the PageRank model, the value of the link depends on the <strong>links into u</strong></li>
-<li>In the HITS model, it depends on the value of the other <strong>links out of u</strong></li>
-</ul>
-<h2 id="Pregel"><a href="#Pregel" class="headerlink" title="Pregel"></a>Pregel</h2><p>Pregel is serving as a computational model. There are four basic elements in Pregel model:</p>
-<ul>
-<li><code>Vertex</code>: In Pregel, each node(vertex) has an unique ID</li>
-<li><code>Edge</code>: In Pregel, each edge can be assigned with a property</li>
-<li><code>Message</code>: Message is the core design in Pregel. Message is used to indicate the status of a vertex.</li>
-<li><code>Superstep</code>: One superstep is an iteration of computation happens in the Pregel.</li>
-</ul>
-<p>In Pregel, for each vertex at each superstep, it will receive a set of messages from previous superstep. The vertex will process all the messages then emit these messages to other vertex.</p>
-<br/>
-<br/>
-
-<h2 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h2><ul>
-<li><a href="https://cloud.tencent.com/developer/news/148367" target="_blank" rel="noopener">Pregel总结</a></li>
-<li><a href="https://io-meter.com/2018/03/23/pregel-in-graphs/" target="_blank" rel="noopener">图解图算法 Pregel: 模型简介与实战案例</a></li>
-<li><a href="https://cshihong.github.io/2018/05/30/Pregel%EF%BC%88%E5%9B%BE%E8%AE%A1%E7%AE%97%EF%BC%89%E6%8A%80%E6%9C%AF%E5%8E%9F%E7%90%86/" target="_blank" rel="noopener">Pregel（图计算）技术原理</a></li>
-</ul>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="https://shimingwu.github.io/2020/11/10/BigData-7/" data-id="ckhsvnfx9000rzxr1c4bqah6x" class="article-share-link">Share</a>
-      
-      
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Big-Data/" rel="tag">Big Data</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-BigData-4" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2020/11/10/BigData-4/" class="article-date">
-  <time datetime="2020-11-10T13:26:40.000Z" itemprop="datePublished">2020-11-10</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2020/11/10/BigData-4/">BigData(4)</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>This is revision note for NUS master study of CS5425 Big Data Systems for Data Science.</p>
-<h2 id="Locality-Sensitive-Hashing"><a href="#Locality-Sensitive-Hashing" class="headerlink" title="Locality Sensitive Hashing"></a>Locality Sensitive Hashing</h2><ul>
-<li><code>Jaccard distance/similarity</code></li>
-<li><code>Shingling</code></li>
-<li><code>Min-hashing</code></li>
-<li><code>Locality Sensitive Hashing(LSH)</code></li>
-</ul>
-<p><strong>Jaccard Distance/Similarity</strong></p>
-<p>We use Jaccard similarity to define the “distance” betweem two elements.</p>
-<p>If we have two <strong>sets</strong>, [1,2,3,4,5,6] and [3,4,6,9,10], there are 3 elements are in intersection: [3,4,6] and there are 8 elements in the union: [1,2,3,4,5,6,9,10], thus, we have:</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Jaccard similarity &#x3D; 3&#x2F;8</span><br><span class="line">Jaccard distance &#x3D; 1 - Jaccard similarity &#x3D; 1 - 3&#x2F;8 &#x3D; 5&#x2F;8</span><br></pre></td></tr></table></figure>
-
-<p><strong>Shingling</strong></p>
-<p>Shingling is to convert document into sets.</p>
-<blockquote>
-<p>A k-shingle (or k-gram) for a document is a sequence of k tokens that appears in the doc.</p>
-</blockquote>
-<p><strong>The order does matter here and the token can be a character or word or even a feature.</strong> </p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">Example 1:</span><br><span class="line">&#123;Hello world&#125;</span><br><span class="line">k &#x3D; 3 characters, we will have &#123;Hel, ell, llo, lo_, o_w, _wo, wor, rld&#125;</span><br><span class="line">k &#x3D; 1 word, we will have &#123;Hello, world&#125;</span><br><span class="line"></span><br><span class="line">Example 2:</span><br><span class="line">&#123;abcab&#125;</span><br><span class="line">k &#x3D; 2, we will have &#123;ab, bc, ca, ab&#125; &#x3D;&gt; remove duplicates &#x3D;&gt; &#123;ab, bc, ca&#125;</span><br><span class="line">Thus, the final result is &#123;ab, bc, ca&#125;</span><br></pre></td></tr></table></figure>
-
-<p>Examples on how the to find the similarity between documents.</p>
-
-
-
-<p>From the diagram, we can see</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">intersection &#x3D; 3</span><br><span class="line">union &#x3D; 6</span><br><span class="line">Jaccard similarity &#x3D; 3&#x2F;6</span><br><span class="line">Jaccard distance &#x3D; 1 - 3&#x2F;6 &#x3D; 3&#x2F;6</span><br></pre></td></tr></table></figure>
-
-<p>However, using this method, the computation will be very heavy. </p>
-<p><strong>Min-hashing</strong></p>
-<p>When a document is very big, it result in a huge amount of shingles. Thus, hashing can be used to compress shingles. </p>
-<blockquote>
-<p>Minshaing converts large sets to short signatures, while preserving similarity</p>
-</blockquote>
-<p><strong>Note: min-hashing is specifically for Jaccard similarity</strong></p>
-<p>The sample of how min-hashing works is shown below.</p>
-
-
-<p>The signature matrix taken from the example is the [1,2,2,1]</p>
-<p>After calculate multiple rounds of permutations independently, as shown below.</p>
-
-
-<p>There are 3 signature matrix:</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">2,1,2,1</span><br><span class="line">2,1,4,1</span><br><span class="line">1,2,1,2</span><br></pre></td></tr></table></figure>
-
-<p>The similarity calculation is</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">Column 1 &amp; Column 3:</span><br><span class="line">Column 1 has (1,2)</span><br><span class="line">Column 3 has (1,2,4)</span><br><span class="line">Union: 3 as (1,2,4)</span><br><span class="line">Intersection: 2 as (1,2)</span><br><span class="line">Similarity &#x3D; 2&#x2F;3</span><br><span class="line">Distance &#x3D; 1 - 2&#x2F;3 &#x3D; 1&#x2F;3</span><br><span class="line">(2,4) are the only 1 different. So similarity &#x3D; 1 &#x2F; 3 &#x3D; 0.67</span><br></pre></td></tr></table></figure>
-
-<p><strong>Locality Sensitive Hashing(LSH)</strong></p>
-<p>Find a documents with Jaccard similarity at least s.</p>
-<h2 id="Clustering"><a href="#Clustering" class="headerlink" title="Clustering"></a>Clustering</h2>
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="https://shimingwu.github.io/2020/11/10/BigData-4/" data-id="ckhsvnfx5000lzxr19n91bcm8" class="article-share-link">Share</a>
-      
-      
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Big-Data/" rel="tag">Big Data</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-BigData-6" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2020/11/10/BigData-6/" class="article-date">
-  <time datetime="2020-11-10T13:24:56.000Z" itemprop="datePublished">2020-11-10</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2020/11/10/BigData-6/">BigData(6)</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>This is revision note for NUS master study of CS5425 Big Data Systems for Data Science.</p>
-<h2 id="Spark"><a href="#Spark" class="headerlink" title="Spark"></a>Spark</h2><p>Spark generalizes the MapReduce to provide the following features:</p>
-<ul>
-<li><code>High performance</code></li>
-<li><code>Better programmability</code></li>
-<li><code>A unified engine</code></li>
-</ul>
-<h2 id="RDD-Resilient-Distributed-Datasets"><a href="#RDD-Resilient-Distributed-Datasets" class="headerlink" title="RDD (Resilient Distributed Datasets)"></a>RDD (Resilient Distributed Datasets)</h2><p>RDD is the core abstraction. </p>
-<blockquote>
-<p>Collections of objects spread across a cluster, stored in RAM or on Disk. Built through parallel transformations and automatically rebuilt on failure</p>
-</blockquote>
-<p>There are two types of RDD:</p>
-<ul>
-<li><code>Parallelized collections</code>: take an existing single-node collection and parallel it</li>
-<li><code>Hadoop datasets</code>: files on HDFS or other compatible storage</li>
-</ul>
-<p>The operations on RDDs are not computed immediately. Instead, only certain actions will trigger the computation, for example, <code>count</code>, <code>saveAsTextFile</code>.</p>
-<p>RDDs track lineage information to reconstruct lost partitions.</p>
-<h2 id="DataFrame"><a href="#DataFrame" class="headerlink" title="DataFrame"></a>DataFrame</h2><p>Spark SQL is a Spark module for structured data processing. There are several ways to interact with Spark SQL including SQL and the Dataset API and with the extra information to perform extra optimizations, and a DataFrame is a Dataset organized into named columns. The image below shows the general idea.</p>
-<img src="/2020/11/10/BigData-6/SparkSQL.png" class="" title="SparkSQL">
-
-<p>DataFrames hold a row with schema information and provides a relational operations regarding the schema.</p>
-<h2 id="Directions-for-Spark"><a href="#Directions-for-Spark" class="headerlink" title="Directions for Spark"></a>Directions for Spark</h2><ul>
-<li><code>Multi-core scalability</code></li>
-<li><code>Continuous (streaming) applications</code></li>
-</ul>
-<h2 id="Challenges-faced-for-numerical-computation-over-big-data"><a href="#Challenges-faced-for-numerical-computation-over-big-data" class="headerlink" title="Challenges faced for numerical computation over big data"></a>Challenges faced for numerical computation over big data</h2><ul>
-<li><code>Correctness</code></li>
-<li><code>Performance</code>: Cache RDDs to avoid I/O and avoid unnecessary computation</li>
-<li><code>Trade-off between accuracy and performance</code></li>
-</ul>
-<h2 id="Spark-libraries"><a href="#Spark-libraries" class="headerlink" title="Spark libraries"></a>Spark libraries</h2><p>There are many libraries in Spark to support common algorithms, like GraphX, MLlib, etc.</p>
-<ul>
-<li><code>GraphX</code>: A general graph processing library. It builds the graph using RDDs of nodes and edges.</li>
-<li><code>Spark streaming</code>: It will split the live stream into different chunks and each chunk of data will be treated as RDDs and the processed results will be returned in batches.</li>
-<li><code>Spark SQL</code>: Enables to save and query the structured data in Spark.<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  &quot;text&quot;: &quot;Example&quot;,</span><br><span class="line">  &quot;user&quot;: &#123;</span><br><span class="line">    &quot;name&quot;: &quot;Mike&quot;,</span><br><span class="line">    &quot;id:1</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">To query from Json, we can have:</span><br><span class="line">c.sql(&quot;select user.name from tweets&quot;)</span><br></pre></td></tr></table></figure></li>
-<li><code>MLlib</code>: Support different machine learning algorithms</li>
-</ul>
-<br/>
-<br/>
-
-<h2 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h2><ul>
-<li><a href="https://spark-reference-doc-cn.readthedocs.io/zh_CN/latest/programming-guide/sql-guide.html" target="_blank" rel="noopener">Spark SQL, DataFrame 和 Dataset 编程指南</a></li>
-<li><a href="https://spark.apache.org/docs/latest/sql-programming-guide.html" target="_blank" rel="noopener">Spark SQL, DataFrames and Datasets Guide</a></li>
-<li><a href="https://blog.csdn.net/zg_hover/article/details/73159212" target="_blank" rel="noopener">spark2.0原理分析–RDD血缘（RDD Lineage）</a></li>
-</ul>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="https://shimingwu.github.io/2020/11/10/BigData-6/" data-id="ckhsvnfx8000qzxr18gce0r2a" class="article-share-link">Share</a>
-      
-      
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Big-Data/" rel="tag">Big Data</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-BigData-5" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2020/11/09/BigData-5/" class="article-date">
-  <time datetime="2020-11-09T20:35:18.000Z" itemprop="datePublished">2020-11-09</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2020/11/09/BigData-5/">BigData(5)</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>This is revision note for NUS master study of CS5425 Big Data Systems for Data Science.</p>
-<h2 id="Hadoop-VS-Databases"><a href="#Hadoop-VS-Databases" class="headerlink" title="Hadoop VS Databases"></a>Hadoop VS Databases</h2><blockquote>
-<p>Apache Hadoop is not a database storage or relational storage, its main competency is to process data in a distributed fashion. It does have a storage component called HDFS (Hadoop Distributed File System) which stoes files used for processing but HDFS does not qualify as a relational database, it is just a storage model.</p>
-</blockquote>
-<blockquote>
-<p>There are components like Hive which can work on top of HDFS and which allows users to query the HDFS storage using SQL like queries using HiveQL but that is just SQL like queries and does not make HDFS or Apcahe Hadoop a database or relational database.</p>
-</blockquote>
-<p>Thus, Hadoop is not a database even though it has a storage system HDFS. But can Hadoop replace the existing database? The answer is uncertain.</p>
-<p>Firstly, schema is supported by relational database. Schema has its own advantages like it defines the contract of data format and it decouples the logical from physical. Moreover, with schema, there is no need to parse the data to get related fields. </p>
-<p>Secondly, column stores are good. Compared to the row stores, a column store has advantages like:</p>
-<ul>
-<li><code>Read efficiency</code>: Usually only few columns will be selected for a query</li>
-<li><code>Better compression</code>: Data under same column will have the same data type.</li>
-<li><code>Vectorized processing</code><blockquote>
-<p>SIMD(Single Instruction Multiple Data)即单指令流多数据流，是一种采用一个控制器来控制多个处理器，同时对一组数据（又称“数据向量”）中的每一个分别执行相同的操作从而实现空间上的并行性的技术。简单来说就是一个指令能够同时处理多个数据。</p>
-</blockquote>
-</li>
-<li><code>Opportunities to operate directly on compressed data</code></li>
-</ul>
-<h2 id="HadoopDB"><a href="#HadoopDB" class="headerlink" title="HadoopDB"></a>HadoopDB</h2><p>HadoopDB is an idea where co-locate a RDBMS on every slave node.</p>
-<h2 id="Hive"><a href="#Hive" class="headerlink" title="Hive"></a>Hive</h2><ul>
-<li><code>Thrift</code>: To support schema on Hadoop</li>
-<li><code>HDFS Block</code>: In each HDFS block, RCFile organizes the records with the basic unit of a row group. </li>
-<li><code>User Defined Functions (UDF)</code>: Provide index</li>
-</ul>
-<h2 id="YARN-Yet-Another-Resource-Negotiator"><a href="#YARN-Yet-Another-Resource-Negotiator" class="headerlink" title="YARN - Yet Another Resource Negotiator"></a>YARN - Yet Another Resource Negotiator</h2><p>Yarn provides resource management and a central platform to deliver consistent operations, security and data governance tools across Hadoop clusters.</p>
-<blockquote>
-<p>By separating resource management functions from the programming model, YARN delegates many scheduling-related functions to per-job components.</p>
-</blockquote>
-<h2 id="Dryad-Graph-Operators"><a href="#Dryad-Graph-Operators" class="headerlink" title="Dryad - Graph Operators"></a>Dryad - Graph Operators</h2><p>Dryad is a general-purpose distributed execution engine for coarse-grain data-parallel applications. </p>
-<h2 id="Spark"><a href="#Spark" class="headerlink" title="Spark"></a>Spark</h2><p>There are two problems with MapReduce:</p>
-<ul>
-<li>Programming language is Java</li>
-<li>Each MapReduce job will be written into disk, the shuffle is a bottleneck</li>
-</ul>
-<p>Spark is a solution that extends the MapReduce.</p>
-<h2 id="Presto"><a href="#Presto" class="headerlink" title="Presto"></a>Presto</h2><p>There are three roles in the Presto query execution:</p>
-<ul>
-<li><code>Coordinator</code>: analyze and schedule</li>
-<li><code>Discovery</code>: heartbeat and role managements</li>
-<li><code>Worker</code>: execute</li>
-</ul>
-<p>The query sent by the presto-cli is a HTTP POST request, and it will be sent to the coordinator. In side the coordinator, the query will be parsed to an Abstract Syntax Tree (AST), then analyzer will convert it to the logical query plan &amp; distributed query plan, the optimizer will make it as optimized query plan, and sent to execution planner.</p>
-<blockquote>
-<p>抽象语法树树，描述的最原始的用户需求。抽象语法树描述的信息，执行效率上不是最优，执行操作也过于复杂。需要把抽象语法树转化成执行计划。执行计划分成两类，一类是逻辑执行计划，一类是物理执行计划。逻辑执行计划，以树状结构来描述执行，每个节点是最简单的操作。物理执行计划，根据逻辑执行计划生成字节码，交由驱动执行。</p>
-</blockquote>
-<br/>
-<br/>
-
-<h2 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h2><ul>
-<li><a href="https://examples.javacodegeeks.com/enterprise-java/apache-hadoop/is-hadoop-a-database/" target="_blank" rel="noopener">Is Hadoop a database</a></li>
-<li><a href="https://zhuanlan.zhihu.com/p/55108455" target="_blank" rel="noopener">深入浅出Hadoop YARN</a></li>
-<li><a href="https://chu888chu888.gitbooks.io/hadoopstudy/content/Content/8/chapter8.html" target="_blank" rel="noopener">第八章 Hive的安装与数据导入导出</a></li>
-<li><a href="https://chu888chu888.gitbooks.io/hadoopstudy/content/Content/3/chapter0301.html" target="_blank" rel="noopener">Hadoop的一些基本概念</a></li>
-<li><a href="https://tech.meituan.com/2014/06/16/presto.html" target="_blank" rel="noopener">Presto实现原理和美团的使用实践</a></li>
-<li><a href="https://blog.csdn.net/sjtuyunlei/article/details/79382979" target="_blank" rel="noopener">深入理解Presto(2) ：Presto查询执行过程</a></li>
-</ul>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="https://shimingwu.github.io/2020/11/09/BigData-5/" data-id="ckhsvnfx7000nzxr1etvghwix" class="article-share-link">Share</a>
+      <a data-url="https://shimingwu.github.io/2020/11/12/BigData-8/" data-id="cki7gopez000vzprv1k8w1h4g" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Big-Data/" rel="tag">Big Data</a></li></ul>
@@ -1296,7 +1285,7 @@
 
   <nav id="page-nav">
     
-    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="extend next" rel="next" href="/page/2/">Next &amp;raquo;</a>
+    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><a class="extend next" rel="next" href="/page/2/">Next &amp;raquo;</a>
   </nav>
 
 </section>
@@ -1320,7 +1309,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">Tag Cloud</h3>
     <div class="widget tagcloud">
-      <a href="/tags/Algorithm/" style="font-size: 12.5px;">Algorithm</a> <a href="/tags/Big-Data/" style="font-size: 20px;">Big Data</a> <a href="/tags/Data-Structure/" style="font-size: 17.5px;">Data Structure</a> <a href="/tags/Distributed-Database/" style="font-size: 17.5px;">Distributed Database</a> <a href="/tags/LeetCode/" style="font-size: 12.5px;">LeetCode</a> <a href="/tags/VueJs/" style="font-size: 10px;">VueJs</a> <a href="/tags/%E5%89%8D%E7%AB%AF/" style="font-size: 15px;">前端</a> <a href="/tags/%E5%8D%8F%E8%AE%AE/" style="font-size: 10px;">协议</a> <a href="/tags/%E5%AE%89%E5%85%A8%E6%80%A7/" style="font-size: 12.5px;">安全性</a> <a href="/tags/%E5%B7%A5%E5%85%B7/" style="font-size: 10px;">工具</a> <a href="/tags/%E6%9E%B6%E6%9E%84/" style="font-size: 10px;">架构</a> <a href="/tags/%E7%AE%97%E6%B3%95/" style="font-size: 12.5px;">算法</a>
+      <a href="/tags/Algorithm/" style="font-size: 12.5px;">Algorithm</a> <a href="/tags/Big-Data/" style="font-size: 17.5px;">Big Data</a> <a href="/tags/Data-Structure/" style="font-size: 20px;">Data Structure</a> <a href="/tags/Distributed-Database/" style="font-size: 20px;">Distributed Database</a> <a href="/tags/LeetCode/" style="font-size: 12.5px;">LeetCode</a> <a href="/tags/VueJs/" style="font-size: 10px;">VueJs</a> <a href="/tags/%E5%89%8D%E7%AB%AF/" style="font-size: 15px;">前端</a> <a href="/tags/%E5%8D%8F%E8%AE%AE/" style="font-size: 10px;">协议</a> <a href="/tags/%E5%AE%89%E5%85%A8%E6%80%A7/" style="font-size: 12.5px;">安全性</a> <a href="/tags/%E5%B7%A5%E5%85%B7/" style="font-size: 10px;">工具</a> <a href="/tags/%E6%9E%B6%E6%9E%84/" style="font-size: 10px;">架构</a> <a href="/tags/%E7%AE%97%E6%B3%95/" style="font-size: 12.5px;">算法</a>
     </div>
   </div>
 
@@ -1342,23 +1331,23 @@
       <ul>
         
           <li>
+            <a href="/2020/11/26/Distributed-Database-System-9/">Distributed Database System (9)</a>
+          </li>
+        
+          <li>
+            <a href="/2020/11/26/Distributed-Database-System-8/">Distributed Database System (8)</a>
+          </li>
+        
+          <li>
+            <a href="/2020/11/26/Distributed-Database-System-7/">Distributed Database System (7)</a>
+          </li>
+        
+          <li>
+            <a href="/2020/11/26/Distributed-Database-System-6/">Distributed Database System (6)</a>
+          </li>
+        
+          <li>
             <a href="/2020/11/22/Distributed-Database-System-5/">Distributed Database System (5)</a>
-          </li>
-        
-          <li>
-            <a href="/2020/11/22/Distributed-Database-System-4/">Distributed Database System (4)</a>
-          </li>
-        
-          <li>
-            <a href="/2020/11/21/Distributed-Database-System-3/">Distributed Database System (3)</a>
-          </li>
-        
-          <li>
-            <a href="/2020/11/21/Distributed-Database-System-2/">Distributed Database System (2)</a>
-          </li>
-        
-          <li>
-            <a href="/2020/11/21/Distributed-Database-System-1/">Distributed Database System (1)</a>
           </li>
         
       </ul>
