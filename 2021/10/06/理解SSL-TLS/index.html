@@ -1,0 +1,56 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="X-UA-Compatible" content="IE=edge"><meta name="author" content="Shiming Wu"><title>理解SSL/TLS · Shiming's Blog</title><meta name="description" content="什么是SSL/TLSSSL的全称是Secure Sockets Layer，TLS的全称是Transport Layer Security。由于SSL和TLS都属于网络加密通信协议，且TLS是SSL的后续版，网络上许多文章都将这两者合起来一起称呼为SSL/TLS。
+在SSL/TLS协议出现之前，HTTP通信是不加密的，这样的明文传播就带来了三个问题：
+
+消息可能被窃听
+消息可能被篡改
+发送者可能是被冒充的
+
+为了解决这三个问题，我们可以使用SSL/TLS协议对HTTP通信进行加密。基于SSL/TLS进行加密的HTTP协议被称作HTTPS（HTTP Over SSL)。
+TLS协议结构TLS协议"><meta name="keywords"><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport"><meta content="yes" name="apple-mobile-web-app-capable"><meta content="black" name="apple-mobile-web-app-status-bar-style"><meta content="telephone=no" name="format-detection"><meta name="renderer" content="webkit"><link rel="stylesheet" href="/css/style.css"><link rel="stylesheet" href="/css/blog_basic.css"><link rel="stylesheet" href="/css/font-awesome.min.css"><link rel="alternate" type="application/atom+xml" title="ATOM 1.0" href="/atom.xml"><script src="/js/jquery.js"></script><meta name="generator" content="Hexo 4.2.1"></head><body><div class="sidebar animated fadeInDown"><div class="logo-title"><div class="title"><img src="/images/logo@2x.png" style="width:127px;"><h3 title=""><a href="/">Shiming's Blog</a></h3><div class="description"><p>寄言燕雀莫相啅，自有云霄万里高</p></div></div></div><ul class="social-links"><li><a href="https://github.com/shimingwu" target="_blank" rel="noopener"><i class="fa fa-github"></i></a></li><li><a href="mailto:wushiming1027@gmail.com"><i class="fa fa-envelope"></i></a></li></ul><div class="footer"><div class="p"> <span>©  </span><i class="fa fa-star"></i><span> Shiming Wu</span></div><div class="by_farbox"><span>Powered by </span><a href="https://hexo.io/zh-cn/" target="_blank">Hexo </a><span> & </span><a href="https://github.com/mrcore/hexo-theme-Anatole-Core" target="_blank">Anatole-Core  </a></div></div></div><div class="main"><div class="page-top animated fadeInDown"><div class="nav"><li><a href="/">首页</a></li><li><a href="/archives">归档</a></li></div><div class="information"><div class="back_btn"><li><a class="fa fa-chevron-left" onclick="window.history.go(-1)"> </a></li></div></div></div><div class="autopagerize_page_element"><div class="content"><div class="post-page"><div class="post animated fadeInDown"><div class="post-title"><h3><a>理解SSL/TLS</a></h3></div><div class="post-content"><h2 id="什么是SSL-TLS"><a href="#什么是SSL-TLS" class="headerlink" title="什么是SSL/TLS"></a>什么是SSL/TLS</h2><p>SSL的全称是Secure Sockets Layer，TLS的全称是Transport Layer Security。由于SSL和TLS都属于网络加密通信协议，且TLS是SSL的后续版，网络上许多文章都将这两者合起来一起称呼为SSL/TLS。</p>
+<p>在SSL/TLS协议出现之前，HTTP通信是不加密的，这样的明文传播就带来了三个问题：</p>
+<ol>
+<li>消息可能被窃听</li>
+<li>消息可能被篡改</li>
+<li>发送者可能是被冒充的</li>
+</ol>
+<p>为了解决这三个问题，我们可以使用SSL/TLS协议对HTTP通信进行加密。基于SSL/TLS进行加密的HTTP协议被称作HTTPS（HTTP Over SSL)。</p>
+<h2 id="TLS协议结构"><a href="#TLS协议结构" class="headerlink" title="TLS协议结构"></a>TLS协议结构</h2><p>TLS协议的主要目标是保证隐私和两个应用程序之间的通讯数据完整性。该协议由两层组成：</p>
+<ul>
+<li>The TLS Record Protocol Layer（TLS记录协议层）：TLS记录协议层建立于可靠的传输上，比如TCP。这个协议层会为高层协议提供数据封装、压缩和加密等功能。</li>
+<li>The TLS Handshake Protocol Layer（TLS握手协议层）：TLS握手协议层建立于TLS记录协议层上。该层包含了三个子协议：握手协议（HandShake Protocol）、密码参数修改协议（Change Cipher Spec Protocol）和告警协议（Alert Protocol）。这些协议用于客户端与服务器数据传输之前进行身份认证，协商加密算法与交换加密密匙等等。</li>
+</ul>
+<img src="/2021/10/06/%E7%90%86%E8%A7%A3SSL-TLS/Transport_Layer_Security.svg" class="" title="Transport-Layer-Security">
+
+<h4 id="TLS记录协议层"><a href="#TLS记录协议层" class="headerlink" title="TLS记录协议层"></a>TLS记录协议层</h4><p>TLS记录协议层包含了TLS记录协议。每一层消息包含了数据长度、数据描述和内容信息。对于需要进行传输的信息，记录协议会对消息进行分片，选择性地压缩数据，为每个片段增加MAC值，加密后进行传输。对于接收到的数据，记录协议会进行解密、验证、解压、重组，然后交付给更高级别的客户。</p>
+<h4 id="TLS握手协议层"><a href="#TLS握手协议层" class="headerlink" title="TLS握手协议层"></a>TLS握手协议层</h4><p>该层包含了三个子协议，其中最重要也最复杂的是TLS握手协议。</p>
+<ul>
+<li>Change Cipher Spec Protocol（密码参数修改协议）：用于告知加密策略的变化。该协议只包含了一个ChangeCipherSpec消息，用于告知接收方后续的记录都会被新协商的加密算法和密钥进行保护和传输。</li>
+<li>Alert Protocol（告警协议）：用来允许一方向另一方报告告警信息。消息中包含告警的严重级别和描述。</li>
+<li>HandShake Protocol（握手协议）：客户端和服务器通过握手协议建立一个会话。握手协议包括客户端与服务器之间的一系列消息。该协议允许服务器和客户机相互验证，协商加密和MAC算法以及保密密钥，用来保护在SSL记录中发送的数据。握手协议包含了四个阶段，这四个阶段就是建立TLS通讯的核心。</li>
+</ul>
+<h2 id="TLS握手过程"><a href="#TLS握手过程" class="headerlink" title="TLS握手过程"></a>TLS握手过程</h2><img src="/2021/10/06/%E7%90%86%E8%A7%A3SSL-TLS/handshake.png" class="" title="handshake">
+
+<ul>
+<li>第一阶段：确认安全参数。这个阶段，客户端和服务器会相互交换协商数据传输中要用到的相关安全参数。该阶段结束的时候，试图建立连接的算法将会对以下内容达成一致：<ul>
+<li>SSL/TLS版本</li>
+<li>加密算法</li>
+<li>压缩方法</li>
+<li>有关密钥生成的两个随机数：客户随机数和服务器随机数</li>
+<li>会话ID</li>
+</ul>
+</li>
+<li>第二阶段：在这个阶段，客户端是所有消息的接收方。服务器会将加密所需的证书发给客户端，该证书中将含括加密所需的公钥。同时服务器会对客户端进行身份验证。</li>
+<li>第三阶段：在这个阶段，服务器是所有消息的接收方。客户端可以对收到的证书进行验证，如果证书不是可信机构颁布、或者证书中的域名与实际域名不一致、或者证书已经过期，就会向访问者显示一个警告，由其选择是否还要继续通信。通过再第一阶段收到的服务器随机数，根据不同的加密算法，客户端会算出一个pre-master密匙（Pre-master secret），使用数字证书中的公钥加密并发送给服务器。</li>
+<li>第四阶段：服务器收到pre-master密匙后通过自己的私钥解密且计算生成本次会话所用的“会话密钥（session key）”，建立安全连接，通过发送一个ChangeCipherSpec告知客户端当前连接已经切换到协商过的加密套件状态，准备使用加密套件和session key加密数据了。</li>
+</ul>
+<h2 id="5-参考资料"><a href="#5-参考资料" class="headerlink" title="5. 参考资料"></a>5. 参考资料</h2><ol>
+<li><a href="https://www.ruanyifeng.com/blog/2014/02/ssl_tls.html" target="_blank" rel="noopener">SSL/TLS协议运行机制的概述</a> </li>
+<li><a href="https://www.cloudflare.com/zh-cn/learning/ssl/what-happens-in-a-tls-handshake/" target="_blank" rel="noopener">What is a TLS handshake?</a> </li>
+<li><a href="https://datatracker.ietf.org/doc/html/rfc5246" target="_blank" rel="noopener">The Transport Layer Security (TLS) Protocol - Version 1.2</a> </li>
+<li><a href="https://hpbn.co/transport-layer-security-tls/" target="_blank" rel="noopener">Transport Layer Security (TLS)</a> </li>
+<li><a href="https://blog.csdn.net/shipfsh_sh/article/details/80419994" target="_blank" rel="noopener">SSL详解</a> </li>
+<li><a href="https://cloud.tencent.com/developer/article/1814069" target="_blank" rel="noopener">SSL协议原理</a> </li>
+<li><a href="https://cshihong.github.io/2019/05/09/SSL%E5%8D%8F%E8%AE%AE%E8%AF%A6%E8%A7%A3/" target="_blank" rel="noopener">SSL/TLS协议详解</a> </li>
+<li><a href="https://www.ruanyifeng.com/blog/2014/09/illustration-ssl.html" target="_blank" rel="noopener">图解SSL/TLS协议</a> </li>
+</ol>
+</div><div class="post-footer"><div class="meta"><div class="info"><i class="fa fa-sun-o"></i><span class="date">2021-10-06</span><i class="fa fa-tag"></i><a class="tag" href="/tags/安全性/" title="安全性">安全性 </a><a class="tag" href="/tags/网络/" title="网络">网络 </a><span class="leancloud_visitors"></span></div></div></div></div><div class="share"><div class="evernote"><a class="fa fa-bookmark" href="" onclick="javascript:join_favorite()" ref="sidebar"></a></div><div class="weibo"><a class="fa fa-weibo" href="javascript:void((function(s,d,e){try{}catch(e){}var f='http://service.weibo.com/share/share.php?',u=d.location.href,p=['url=',e(u),'&amp;title=',e(d.title),'&amp;appkey=2924220432'].join('');function a(){if(!window.open([f,p].join(''),'mb',['toolbar=0,status=0,resizable=1,width=620,height=450,left=',(s.width-620)/2,',top=',(s.height-450)/2].join('')))u.href=[f,p].join('');};if(/Firefox/.test(navigator.userAgent)){setTimeout(a,0)}else{a()}})(screen,document,encodeURIComponent));"></a></div><div class="twitter"><a class="fa fa-twitter" href="http://twitter.com/home?status=,https://shimingwu.github.io/2021/10/06/理解SSL-TLS/,Shiming' target="_blank" rel="noopener"s Blog,理解SSL/TLS,;"></a></div></div><div class="pagination"><ul class="clearfix"><li class="next pagbuttons"><a class="btn" role="navigation" href="/2021/06/10/%E7%BF%BB%E8%AF%91-Go-MySQL-%E9%A9%B1%E5%8A%A8%E7%9A%84%E4%B8%89%E4%B8%AABUG/" title="[翻译]Go MySQL 驱动的三个BUG">下一篇</a></li></ul></div><script src="/js/visitors.js"></script></div></div></div></div><script src="/js/jquery-migrate-1.2.1.min.js"></script><script src="/js/jquery.appear.js"></script><script src="/js/add-bookmark.js"></script><script src="/js/baidu-tongji.js"></script><script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"debug":false,"model":{"jsonPath":"/live2dw/assets/tororo.model.json"},"display":{"position":"left","width":200,"height":400,"hOffset":5,"vOffset":-38},"mobile":{"show":false,"scale":0.2},"react":{"opacityDefault":0.8,"opacityOnHover":0.2},"log":false});</script></body></html>
