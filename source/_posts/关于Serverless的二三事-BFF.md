@@ -76,7 +76,7 @@ tags: [前端, 架构]
 
 ### 技术栈问题
 
-Mircoservice已然是行业的一个趋势，但是依赖问题始终令人头疼。在同一个生态下面的不同服务往往都有自己的通信和工作方式，常常需要依赖专门设计的接口进行通信。这种情况下，我们往往需要考虑：
+Micro-Service已然是行业的一个趋势，但是依赖问题始终令人头疼。在同一个生态下面的不同服务往往都有自己的通信和工作方式，常常需要依赖专门设计的接口进行通信。这种情况下，我们往往需要考虑：
 - 即如何对接不同的downstream service：对于不同的接口，我们是应该使用RPC协议，Rest还是GraphQL？
 - 如何管理组合这些API：该如何合理进行异步的调用，如何引用事件机制（比如RX）将这些异步的控制流程进行简化？
 - 当某一个API调用失败时，该如何应对：是否应该在BFF层引入容错？如何设计熔断、重试机制才能合理的保护整个系统？是否需要提供不完整的响应内容？
@@ -106,5 +106,5 @@ Mircoservice已然是行业的一个趋势，但是依赖问题始终令人头�
 1. [微服务架构~BFF和网关是如何演化出来的](https://www.cnblogs.com/alimayun/p/12063401.html) 
 2. [Why big companies and rapidly growing startups need Back-end for Front-end](https://medium.com/blue-harvest-tech-blog/why-big-companies-and-rapidly-growing-startups-need-back-end-for-front-end-ee8e6ab8f575) 
 3. [Backend For Frontend (BFF)](https://cloud.tencent.com/developer/article/1444653) 
-4. [Building a Backend for Frontend (BFF) For Your Microservices](https://nordicapis.com/building-a-backend-for-frontend-shim-for-your-microservices/) 
+4. [Building a Backend for Frontend (BFF) For Your Micro-Services](https://nordicapis.com/building-a-backend-for-frontend-shim-for-your-microservices/) 
 5. [Backends for Frontends pattern](https://docs.microsoft.com/en-us/azure/architecture/patterns/backends-for-frontends) 
